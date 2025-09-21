@@ -2,6 +2,7 @@ import 'package:divipay/domain/Group.dart';
 import 'package:divipay/presentation/screens/groupDetail.dart';
 import 'package:divipay/presentation/screens/notifications.dart';
 import 'package:divipay/presentation/screens/profile.dart';
+import 'package:divipay/presentation/screens/register.dart';
 import 'package:go_router/go_router.dart';
 import '../presentation/screens/login.dart';
 import '../presentation/screens/home.dart';
@@ -42,6 +43,10 @@ final GoRouter routerApp = GoRouter(
     GoRoute(
       path: "/profile",
       pageBuilder: (context, state) => noTransitionPage(Profile(), state),
+    ),
+    GoRoute(
+      path: "/register",
+      pageBuilder: (context, state) => noTransitionPage(Register(), state),
     ),
   ],
 );
