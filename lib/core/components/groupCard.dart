@@ -2,7 +2,6 @@ import 'package:divipay/domain/Group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:math';
-
 import 'package:go_router/go_router.dart';
 
 class GroupCard extends StatelessWidget {
@@ -10,85 +9,99 @@ class GroupCard extends StatelessWidget {
 
   const GroupCard({Key? key, required this.group}) : super(key: key);
 
-LinearGradient generateGradientFromKey(String key) {
-  int hash = key.hashCode;
-  final random = Random(hash);
+  // Genera un gradient a partir de la key del grupo
+  LinearGradient generateGradientFromKey(String key) {
+    int hash = key.hashCode;
+    final random = Random(hash);
 
-  // Base azul (DiviPay)
-  const baseColor = Color(0xFF0a66c2);
+    const baseColor = Color(0xFF0a66c2); // Azul DiviPay
+    HSLColor hslBase = HSLColor.fromColor(baseColor);
 
-  // Generar dos tonos azules distintos a partir de la base
-  HSLColor hslBase = HSLColor.fromColor(baseColor);
+    HSLColor hsl1 = hslBase.withLightness(
+      (hslBase.lightness + (random.nextDouble() * 0.2 - 0.1)).clamp(0.3, 0.8),
+    );
+    HSLColor hsl2 = hslBase.withSaturation(
+      (hslBase.saturation + (random.nextDouble() * 0.2 - 0.1)).clamp(0.4, 1.0),
+    );
 
-  // Pequeña variación de la luminosidad y saturación (para no salir de la gama)
-  HSLColor hsl1 = hslBase.withLightness(
-    (hslBase.lightness + (random.nextDouble() * 0.2 - 0.1)).clamp(0.3, 0.8),
-  );
-  HSLColor hsl2 = hslBase.withSaturation(
-    (hslBase.saturation + (random.nextDouble() * 0.2 - 0.1)).clamp(0.4, 1.0),
-  );
-
-  Color color1 = hsl1.toColor();
-  Color color2 = hsl2.toColor();
-
-  return LinearGradient(
-    begin: Alignment.centerLeft,
-    end: Alignment.centerRight,
-    colors: [color1, color2],
-  );
-}
+    return LinearGradient(
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+      colors: [hsl1.toColor(), hsl2.toColor()],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.push("/detail",extra: group);
+        context.push("/detail", extra: group);
       },
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              spreadRadius: 2,
-              blurRadius: 12,
-              offset: Offset(2, 4),
-            ),
-          ],
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(width: 0.3,color: Colors.grey),
+          boxShadow: [
+
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header con gradient
             Container(
               height: 65,
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
+                gradient: generateGradientFromKey(group.name),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(12),
                   topRight: Radius.circular(12),
                 ),
               ),
             ),
+            // Contenido de la tarjeta
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(group.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 4),
-                  Text(group.description, style: TextStyle(fontSize: 14)),
-                  SizedBox(height: 4),
+                  Text(
+                    group.name,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    group.description,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('\$${group.balance}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                      Icon(CupertinoIcons.arrow_right, size: 22,),
+                      Text(
+                        '\$${group.balance}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Icon(
+                        CupertinoIcons.arrow_right,
+                        size: 22,
+                        color: Colors.black54,
+                      ),
                     ],
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

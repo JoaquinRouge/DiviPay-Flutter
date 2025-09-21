@@ -32,6 +32,18 @@ class Group {
         description: "This is the third group",
         balance: 300.0,
       ),
+            Group(
+        id: 3,
+        name: "Group 4",
+        description: "This is the fourth group",
+        balance: 300.0,
+      ),
+            Group(
+        id: 3,
+        name: "Group 5",
+        description: "This is the fifth group",
+        balance: 300.0,
+      ),
     ];
   }
 

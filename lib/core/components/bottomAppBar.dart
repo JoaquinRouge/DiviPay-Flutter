@@ -19,7 +19,7 @@ class CustomBottomBar extends ConsumerWidget {
       height: 70,
       decoration: BoxDecoration(
         border: Border(
-          top: BorderSide(color: Colors.grey.shade400, width: 0.1),
+          top: BorderSide(color: Colors.grey, width: 0.1),
         ),
       ),
       child: Padding(
@@ -79,14 +79,14 @@ class CustomBottomBar extends ConsumerWidget {
           icon,
           style: samePage ? HeroIconStyle.solid : HeroIconStyle.outline,
           size: 30,
-          color: samePage ? Theme.of(context).colorScheme.primary : Colors.grey,
+          color: samePage ? Theme.of(context).primaryColor : Colors.grey,
         ),
         const SizedBox(height: 4),
         Text(
           label,
           style: TextStyle(
             color: samePage
-                ? Theme.of(context).colorScheme.primary
+                ? Theme.of(context).primaryColor
                 : Colors.grey,
             fontSize: 11,
           ),
