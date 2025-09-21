@@ -1,64 +1,97 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:heroicons/heroicons.dart';
+import '../../provider/pageProvider.dart';
 
-class CustomBottomBar extends StatelessWidget {
-  const CustomBottomBar({super.key, required this.index});
-
-  final int index;
+class CustomBottomBar extends ConsumerWidget {
+  const CustomBottomBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BottomAppBar(
-      color: Colors.white,
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(pageProvider, (previous, next) {
+      if (next != previous) {
+        context.go(next);
+      }
+    });
+
+    return Container(
       height: 70,
-      child: Container(
-        height: 50,
-        alignment: Alignment.center,
-        child: Padding(
-          padding: const EdgeInsets.only(right: 18,left: 18),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              navContainer(
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(color: Colors.grey.shade400, width: 0.1),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            GestureDetector(
+              onTap: () {
+                ref.read(pageProvider.notifier).state = '/home';
+              },
+              child: navItem(context, HeroIcons.home, 'Home', '/home', ref),
+            ),
+            GestureDetector(
+              onTap: () {
+                ref.read(pageProvider.notifier).state = '/notifications';
+              },
+              child: navItem(
                 context,
-                index == 0 ? FontAwesomeIcons.solidHouse : FontAwesomeIcons.house,
-                "Home",
-                "/home",
+                HeroIcons.bell,
+                'Notifications',
+                '/notifications',
+                ref,
               ),
-              navContainer(
+            ),
+            GestureDetector(
+              onTap: () {
+                ref.read(pageProvider.notifier).state = '/profile';
+              },
+              child: navItem(
                 context,
-                index == 1 ? FontAwesomeIcons.solidBell : FontAwesomeIcons.bell,
-                "Notifications",
-                "/home",
+                HeroIcons.user,
+                'Profile',
+                '/profile',
+                ref,
               ),
-              //navContainer(context,FontAwesomeIcons.,"Friends","/home"),
-              navContainer(
-                context,
-                index == 2 ? FontAwesomeIcons.solidUser : FontAwesomeIcons.user,
-                "Profile",
-                "/home",
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  InkWell navContainer(
+  Column navItem(
     BuildContext context,
-    IconData icon,
-    String text,
+    HeroIcons icon,
+    String label,
     String route,
+    WidgetRef ref,
   ) {
-    return InkWell(
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      onTap: () {
-        context.go(route);
-      },
-      child: Column(children: [Icon(icon), Text(text)]),
+    bool samePage = ref.watch(pageProvider) == route;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        HeroIcon(
+          icon,
+          style: samePage ? HeroIconStyle.solid : HeroIconStyle.outline,
+          size: 30,
+          color: samePage ? Theme.of(context).colorScheme.primary : Colors.grey,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: TextStyle(
+            color: samePage
+                ? Theme.of(context).colorScheme.primary
+                : Colors.grey,
+            fontSize: 11,
+          ),
+        ),
+      ],
     );
   }
 }

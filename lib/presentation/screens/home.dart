@@ -1,25 +1,30 @@
+import 'package:divipay/core/components/appBar.dart';
 import 'package:divipay/core/components/bottomAppBar.dart';
+import 'package:divipay/core/components/groupCard.dart';
+import 'package:divipay/domain/Group.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
-  const Home({super.key});
+  Home({super.key});
+
+  final List<Group> groups = Group.getGroups();
 
   @override
   Widget build(BuildContext context) {
-    AppBar appBar = AppBar(
-      toolbarHeight: 80,
-      backgroundColor: Theme.of(context).primaryColor,
-      title: Center(
-        child: Image.asset(
-          "assets/images/logo-white.png",
-          width: 100,
-        ),
-      )
-    );
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: appBar,
-      bottomNavigationBar: CustomBottomBar(index: 0,),
+      appBar: CustomAppBar(),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: GridView.count(
+          childAspectRatio: 1.9,
+          crossAxisCount: 1,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
+          children: [GroupCard(group:groups[0]),GroupCard(group:groups[1])],
+        ),
+      ),
+      bottomNavigationBar: CustomBottomBar(),
     );
   }
 }
