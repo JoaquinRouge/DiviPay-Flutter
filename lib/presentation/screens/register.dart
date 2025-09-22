@@ -22,12 +22,12 @@ class _LoginState extends State<Register> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        toolbarHeight: 40,
+        toolbarHeight: 60,
         iconTheme: IconThemeData(
           color: Theme.of(context).primaryColor,
           size: 35
         ),
-      ), // Fondo general blanco para profesional
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
