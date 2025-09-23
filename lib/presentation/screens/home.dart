@@ -29,7 +29,7 @@ class _HomeState extends ConsumerState<Home> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: GridView.count(
-          childAspectRatio: 1.9,
+          childAspectRatio: 1.3,
           crossAxisCount: 1,
           crossAxisSpacing: 20,
           mainAxisSpacing: 20,
