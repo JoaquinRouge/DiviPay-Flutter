@@ -20,7 +20,7 @@ class GroupRepo {
     return groups;
   }
 
-  static addGroup(Group group) {
-    groups.add(group);
+  static addGroup(String name,String description) {
+    groups.add(Group(id: groups.length + 1, name: name, description: description, balance: 0));
   }
 }
