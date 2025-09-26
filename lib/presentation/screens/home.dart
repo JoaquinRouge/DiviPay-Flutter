@@ -163,6 +163,7 @@ class _HomeState extends ConsumerState<Home> {
                     GroupRepo.addGroup(
                       nameController.text,
                       descriptionController.text,
+                      DateTime.now().toString() 
                     );
 
                     ref.read(groupsProvider.notifier).state = [

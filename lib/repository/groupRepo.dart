@@ -4,15 +4,20 @@ class GroupRepo {
   static List<Group> groups = [
     Group(
       id: 1,
-      name: "Group 1",
-      description: "This is the first group",
+      name: "Vacaciones en Mallorca",
+      description:
+          "Un viaje inolvidable para disfrutar del sol y el mar con los mejores amigos. Planificando gastos de alojamiento, comida, transporte y actividades.",
       balance: 100.0,
+      members: List.empty(),
+      createdAt: "13 de Abril de 2025",
     ),
     Group(
       id: 2,
       name: "Group 2",
       description: "This is the second group",
       balance: 200.0,
+      members: List.empty(),
+      createdAt: "20 de Septiembre de 2025",
     ),
   ];
 
@@ -20,7 +25,16 @@ class GroupRepo {
     return groups;
   }
 
-  static addGroup(String name,String description) {
-    groups.add(Group(id: groups.length + 1, name: name, description: description, balance: 0));
+  static addGroup(String name, String description, String createdAt) {
+    groups.add(
+      Group(
+        id: groups.length + 1,
+        name: name,
+        description: description,
+        balance: 0,
+        members: List.empty(),
+        createdAt: createdAt,
+      ),
+    );
   }
 }
