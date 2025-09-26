@@ -2,6 +2,7 @@ import 'package:divipay/core/components/appBar.dart';
 import 'package:divipay/domain/Group.dart';
 import 'package:flutter/material.dart';
 import 'package:divipay/core/components/bottomAppBar.dart';
+import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
 
 class Groupdetail extends StatelessWidget {
@@ -22,89 +23,177 @@ class Groupdetail extends StatelessWidget {
               SizedBox(height: 10),
               spentSummary(context),
               SizedBox(height: 25),
-              SizedBox(
-                width: 400,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    foregroundColor: Colors.white, // borde
-                  ),
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      HeroIcon(HeroIcons.userPlus, size: 30),
-                      SizedBox(width: 10),
-                      Text(
-                        "Anadir amigo",
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              SizedBox(
-                width: 400,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    foregroundColor: Colors.white, // borde
-                  ),
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      HeroIcon(HeroIcons.plusCircle, size: 30),
-                      SizedBox(width: 10),
-                      Text(
-                        "Anadir gasto",
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 10,),
-              SizedBox(
-                width: 400,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 176, 49, 40),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    foregroundColor: Colors.white, // borde
-                  ),
-                  onPressed: () {},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      HeroIcon(HeroIcons.trash, size: 30),
-                      SizedBox(width: 10),
-                      Text(
-                        "Eliminar grupo",
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              actionButtons(context)
             ],
           ),
         ),
       ),
       bottomNavigationBar: CustomBottomBar(),
     );
+  }
+
+  Column actionButtons(BuildContext context) {
+    return Column(
+              children: [
+                SizedBox(
+              width: 400,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  foregroundColor: Colors.white, // borde
+                ),
+                onPressed: () {},
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    HeroIcon(HeroIcons.userPlus, size: 30),
+                    SizedBox(width: 10),
+                    Text("Anadir amigo", style: TextStyle(fontSize: 15)),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            SizedBox(
+              width: 400,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  foregroundColor: Colors.white, // borde
+                ),
+                onPressed: () {},
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    HeroIcon(HeroIcons.plusCircle, size: 30),
+                    SizedBox(width: 10),
+                    Text("Anadir gasto", style: TextStyle(fontSize: 15)),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            SizedBox(
+              width: 400,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 176, 49, 40),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  foregroundColor: Colors.white, // borde
+                ),
+                onPressed: () {
+                  deleteGroupConfirmation(context);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    HeroIcon(HeroIcons.trash, size: 30),
+                    SizedBox(width: 10),
+                    Text("Eliminar grupo", style: TextStyle(fontSize: 15)),
+                  ],
+                ),
+              ),
+            ),
+              ],
+            );
+  }
+
+  Future<dynamic> deleteGroupConfirmation(BuildContext context) {
+    return showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (context) {
+                      return AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            16,
+                          ), // bordes redondeados
+                        ),
+                        backgroundColor: Colors.white, // color de fondo
+                        title: Text(
+                          "Eliminar Grupo",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        content: Text(
+                          "¿Estás seguro que querés eliminar este grupo? Esta accion es irreversible.",
+                          style: TextStyle(fontSize: 14),
+                          textAlign: TextAlign.center,
+                        ),
+                        actions: [
+                          Column(
+                            children: [
+                              SizedBox(
+                                width: 400,
+                                height: 50,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color.fromARGB(
+                                      255,
+                                      176,
+                                      49,
+                                      40,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    foregroundColor: Colors.white, // borde
+                                  ),
+                                  onPressed: () {},
+                                  child: Text(
+                                    "Confirmar",
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              SizedBox(
+                                width: 400,
+                                height: 50,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    foregroundColor: Colors.white,
+                                    side: const BorderSide(
+                                      color: Colors.grey,
+                                      width: 1,
+                                    ), // borde
+                                  ),
+                                  onPressed: () {
+                                    context.pop();
+                                  },
+                                  child: Text(
+                                    "Cancelar",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  );
   }
 
   Container spentSummary(BuildContext context) {
