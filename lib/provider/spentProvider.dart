@@ -28,6 +28,16 @@ class SpentsNotifier extends AsyncNotifier<List<Spent>> {
     return current.where((s) => s.groupId == groupId).toList();
   }
 
+  double getTotalAmountForGroupId(int groupId) {
+    double amount = 0;
+
+    for (Spent spent in getSpentsByGroup(groupId)) {
+      amount += spent.amount;
+    }
+
+    return amount;
+  }
+
   Future<void> removeSpent(int id) async {
     // Eliminar en repo
     SpentRepo.removeSpent(id);

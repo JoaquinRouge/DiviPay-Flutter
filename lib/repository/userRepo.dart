@@ -11,4 +11,16 @@ class UserRepo {
   static List<User> getUsers() {
     return users;
   }
+
+  static List<User> getUsersByIdList(List<int> ids) {
+    List<User> usersMatch = [];
+
+    for (var user in users) {
+      if (ids.contains(user.id)) {
+        usersMatch.add(user);
+      }
+    }
+
+    return usersMatch;
+  }
 }

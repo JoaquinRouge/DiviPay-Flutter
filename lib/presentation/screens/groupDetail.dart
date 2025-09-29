@@ -2,7 +2,7 @@ import 'package:divipay/core/components/appBar.dart';
 import 'package:divipay/domain/Group.dart';
 import 'package:divipay/domain/User.dart';
 import 'package:divipay/provider/spentProvider.dart';
-import 'package:divipay/repository/spentRepo.dart';
+import 'package:divipay/repository/userRepo.dart';
 import 'package:flutter/material.dart';
 import 'package:divipay/core/components/bottomAppBar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -299,7 +299,7 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
                         backgroundColor: Colors.red,
                       ),
                     );
-
+                  
                     return;
                   }
 
@@ -307,6 +307,22 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
                     if (selected[i]) {
                       selectedMemberIds.add(members[i].id);
                     }
+                  }
+
+                  if (selectedMemberIds.isEmpty) {
+                    context.pop();
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "No se puede crear un gasto sin miembros involucrados.",
+                        ),
+                        duration: Duration(seconds: 2), // opcional
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+
+                    return;
                   }
 
                   spentsNotifier.addSpent(
@@ -517,16 +533,119 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
                           itemCount: groupSpents.length,
                           itemBuilder: (context, index) {
                             final spent = groupSpents[index];
+                            final spentMembers = UserRepo.getUsersByIdList(
+                              spent.members,
+                            );
+
                             return Container(
-                              margin: const EdgeInsets.symmetric(vertical: 6),
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(12),
+                              margin: const EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 4,
                               ),
-                              child: Text(
-                                spent.description,
-                                style: const TextStyle(fontSize: 16),
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                                border: Border.all(
+                                  width: 0.3,
+                                  color: Colors.grey.shade300,
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  /// Descripción y monto
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      /// Descripción con protección contra overflow
+                                      Expanded(
+                                        child: Text(
+                                          spent.description,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+
+                                      const SizedBox(width: 8),
+
+                                      /// Monto
+                                      Text(
+                                        "\$${spent.amount.toStringAsFixed(2)}",
+                                        style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                  const SizedBox(height: 8),
+                                  Divider(
+                                    color: Colors.grey.shade300,
+                                    thickness: 1,
+                                  ),
+                                  const SizedBox(height: 8),
+
+                                  /// Label de involucrados
+                                  const Text(
+                                    "Involucrados:",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+
+                                  /// Lista horizontal de usuarios involucrados
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: spentMembers.map((user) {
+                                        return Container(
+                                          margin: const EdgeInsets.only(
+                                            right: 8,
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 6,
+                                            horizontal: 14,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(
+                                              context,
+                                            ).primaryColor.withOpacity(0.9),
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            user.fullName,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ],
                               ),
                             );
                           },

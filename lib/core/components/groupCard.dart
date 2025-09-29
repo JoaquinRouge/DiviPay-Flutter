@@ -1,14 +1,21 @@
 import 'package:divipay/domain/Group.dart';
+import 'package:divipay/provider/spentProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math';
 import 'package:go_router/go_router.dart';
 
-class GroupCard extends StatelessWidget {
+class GroupCard extends ConsumerStatefulWidget {
   final Group group;
 
   const GroupCard({super.key, required this.group});
 
+  @override
+  ConsumerState<GroupCard> createState() => _GroupCardState();
+}
+
+class _GroupCardState extends ConsumerState<GroupCard> {
   // Genera un gradient único a partir de la key
   LinearGradient generateGradientFromKey(String key) {
     int hash = key.hashCode;
@@ -53,8 +60,14 @@ class GroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final spentsNotifier = ref.watch(spentsProvider.notifier);
+
+    // Usás tu método
+    final total = spentsNotifier.getTotalAmountForGroupId(widget.group.id);
+
     return GestureDetector(
-      onTap: () => context.push("/detail", extra: group),
+      onTap: () => context.push("/detail", extra: widget.group),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
@@ -78,7 +91,7 @@ class GroupCard extends StatelessWidget {
                 Container(
                   height: 70,
                   decoration: BoxDecoration(
-                    gradient: generateGradientFromKey(group.name),
+                    gradient: generateGradientFromKey(widget.group.name),
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(16),
                       topRight: Radius.circular(16),
@@ -94,7 +107,7 @@ class GroupCard extends StatelessWidget {
                       Text(
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        group.name,
+                        widget.group.name,
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -102,7 +115,7 @@ class GroupCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        group.description,
+                        widget.group.description,
                         maxLines:2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -115,7 +128,7 @@ class GroupCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '\$${group.balance}',
+                            '\$${total}',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -149,7 +162,7 @@ class GroupCard extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      getInitials(group.name),
+                      getInitials(widget.group.name),
                       style: const TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.bold,

@@ -8,7 +8,7 @@ class GroupRepo {
       name: "Vacaciones en Mallorca",
       description:
           "Un viaje inolvidable para disfrutar del sol y el mar con los mejores amigos. Planificando gastos de alojamiento, comida, transporte y actividades.",
-      balance: 100.0,
+      balance: 0,
       members: UserRepo.getUsers(),
       createdAt: "13 de Abril de 2025",
     ),
@@ -16,7 +16,7 @@ class GroupRepo {
       id: 2,
       name: "Group 2",
       description: "This is the second group",
-      balance: 200.0,
+      balance: 0,
       members: UserRepo.getUsers(),
       createdAt: "20 de Septiembre de 2025",
     ),
