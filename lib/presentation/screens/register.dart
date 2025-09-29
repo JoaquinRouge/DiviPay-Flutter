@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class Register extends StatefulWidget {
-  Register({super.key});
+  const Register({super.key});
 
   @override
   State<Register> createState() => _LoginState();

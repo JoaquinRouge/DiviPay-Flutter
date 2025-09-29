@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 class GroupCard extends StatelessWidget {
   final Group group;
 
-  const GroupCard({Key? key, required this.group}) : super(key: key);
+  const GroupCard({super.key, required this.group});
 
   // Genera un gradient único a partir de la key
   LinearGradient generateGradientFromKey(String key) {

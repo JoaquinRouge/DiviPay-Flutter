@@ -19,7 +19,7 @@ Page<dynamic> noTransitionPage(Widget child, GoRouterState state) {
 }
 
 final GoRouter routerApp = GoRouter(
-  initialLocation: "/login",
+  initialLocation: "/home",
   routes: [
     GoRoute(
       path: "/login",

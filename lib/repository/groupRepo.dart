@@ -1,4 +1,5 @@
 import 'package:divipay/domain/Group.dart';
+import 'package:divipay/repository/userRepo.dart';
 
 class GroupRepo {
   static List<Group> groups = [
@@ -8,7 +9,7 @@ class GroupRepo {
       description:
           "Un viaje inolvidable para disfrutar del sol y el mar con los mejores amigos. Planificando gastos de alojamiento, comida, transporte y actividades.",
       balance: 100.0,
-      members: List.empty(),
+      members: UserRepo.getUsers(),
       createdAt: "13 de Abril de 2025",
     ),
     Group(
@@ -16,7 +17,7 @@ class GroupRepo {
       name: "Group 2",
       description: "This is the second group",
       balance: 200.0,
-      members: List.empty(),
+      members: UserRepo.getUsers(),
       createdAt: "20 de Septiembre de 2025",
     ),
   ];

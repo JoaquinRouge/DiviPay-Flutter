@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class Login extends StatefulWidget {
-  Login({super.key});
+  const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();
@@ -22,7 +22,6 @@ class _LoginState extends State<Login> {
       backgroundColor: Colors.white, // Fondo general blanco para profesional
       body: Center(
         child: SingleChildScrollView(
-          // Para que no haga overflow en móviles
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

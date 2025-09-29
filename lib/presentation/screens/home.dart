@@ -8,7 +8,7 @@ import 'package:divipay/provider/groupsProvider.dart';
 import 'package:heroicons/heroicons.dart';
 
 class Home extends ConsumerStatefulWidget {
-  Home({super.key});
+  const Home({super.key});
 
   @override
   ConsumerState<Home> createState() => _HomeState();
@@ -34,7 +34,7 @@ class _HomeState extends ConsumerState<Home> {
           crossAxisSpacing: 20,
           mainAxisSpacing: 20,
           children: [
-            ...groups.map((group) => GroupCard(group: group)).toList(),
+            ...groups.map((group) => GroupCard(group: group)),
           ],
         ),
       ),
@@ -95,7 +95,7 @@ class _HomeState extends ConsumerState<Home> {
             TextFormField(
               controller: nameController,
               decoration: InputDecoration(
-                labelText: "Group Name",
+                labelText: "Nombre del grupo",
                 labelStyle: TextStyle(color: Theme.of(context).primaryColor),
                 prefixIcon: Icon(
                   Icons.group,
@@ -119,7 +119,7 @@ class _HomeState extends ConsumerState<Home> {
               controller: descriptionController,
               maxLines: 3,
               decoration: InputDecoration(
-                labelText: "Description",
+                labelText: "Descripción",
                 labelStyle: TextStyle(color: Theme.of(context).primaryColor),
                 prefixIcon: Icon(
                   Icons.description,
