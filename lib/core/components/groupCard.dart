@@ -128,7 +128,7 @@ class _GroupCardState extends ConsumerState<GroupCard> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '\$${total}',
+                            '\$$total',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

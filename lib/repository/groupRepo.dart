@@ -12,14 +12,6 @@ class GroupRepo {
       members: UserRepo.getUsers(),
       createdAt: "13 de Abril de 2025",
     ),
-    Group(
-      id: 2,
-      name: "Group 2",
-      description: "This is the second group",
-      balance: 0,
-      members: UserRepo.getUsers(),
-      createdAt: "20 de Septiembre de 2025",
-    ),
   ];
 
   static List<Group> getGroups() {
@@ -37,5 +29,9 @@ class GroupRepo {
         createdAt: createdAt,
       ),
     );
+  }
+
+  static deleteGroup(int groupId) {
+    groups.removeWhere((group) => group.id == groupId);
   }
 }

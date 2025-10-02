@@ -2,6 +2,8 @@ import 'package:divipay/core/components/appBar.dart';
 import 'package:divipay/domain/Group.dart';
 import 'package:divipay/domain/User.dart';
 import 'package:divipay/provider/spentProvider.dart';
+import 'package:divipay/provider/userLoggedProvider.dart';
+import 'package:divipay/repository/groupRepo.dart';
 import 'package:divipay/repository/userRepo.dart';
 import 'package:flutter/material.dart';
 import 'package:divipay/core/components/bottomAppBar.dart';
@@ -33,7 +35,7 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
             children: [
               groupInfo(),
               SizedBox(height: 10),
-              spentSummary(context),
+              spentSummary(context, ref, widget.group.id),
               SizedBox(height: 25),
               actionButtons(context),
             ],
@@ -96,19 +98,31 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
 
                   return StatefulBuilder(
                     builder: (context, setModalState) {
+                      bool isSelectAllActive = selected.every((e) => e);
+
                       return addSpentModalContent(
                         context,
                         widget.group.members,
                         selected,
                         nameController,
-                        amountController, // le pasamos el setState del modal
+                        amountController,
                         setModalState,
+                        isSelectAllActive,
+                        (bool newVal) {
+                          setModalState(() {
+                            isSelectAllActive = newVal;
+                            for (int i = 0; i < selected.length; i++) {
+                              selected[i] = newVal;
+                            }
+                          });
+                        },
                       );
                     },
                   );
                 },
               );
             },
+
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -155,6 +169,8 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
     TextEditingController nameController,
     TextEditingController amountController,
     void Function(void Function()) setModalState,
+    bool isSelectAllActive,
+    void Function(bool) onSelectAllChanged,
   ) {
     final spentsNotifier = ref.watch(spentsProvider.notifier);
 
@@ -230,10 +246,24 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
               endIndent: 12,
             ),
             const SizedBox(height: 15),
-            const Text(
-              "Miembros involucrados",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Miembros involucrados",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    final newValue = !isSelectAllActive;
+                    onSelectAllChanged(newValue); // 👈 usa el callback
+                  },
+                  child: isSelectAllActive
+                      ? const Icon(Icons.check_box)
+                      : const Icon(Icons.check_box_outline_blank),
+                ),
+              ],
             ),
             const SizedBox(height: 10),
             ListView.builder(
@@ -258,6 +288,11 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
                   onChanged: (value) {
                     setModalState(() {
                       selected[index] = value ?? false;
+
+                      // Actualizar el "select all" según el estado de los checkboxes
+                      isSelectAllActive = selected.every(
+                        (element) => element == true,
+                      );
                     });
                   },
                 );
@@ -289,17 +324,15 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
 
                   if (description.isEmpty || amountController.text.isEmpty) {
                     context.pop();
-
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
                           "No se pudo crear el grupo. Los campos deben estar completos",
                         ),
-                        duration: Duration(seconds: 2), // opcional
+                        duration: const Duration(seconds: 2),
                         backgroundColor: Colors.red,
                       ),
                     );
-                  
                     return;
                   }
 
@@ -311,30 +344,28 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
 
                   if (selectedMemberIds.isEmpty) {
                     context.pop();
-
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
                           "No se puede crear un gasto sin miembros involucrados.",
                         ),
-                        duration: Duration(seconds: 2), // opcional
+                        duration: const Duration(seconds: 2),
                         backgroundColor: Colors.red,
                       ),
                     );
-
                     return;
                   }
 
                   spentsNotifier.addSpent(
                     description,
                     amount,
-                    1,
+                    ref.read(userLogged)!.id,
                     widget.group.id,
                     selectedMemberIds,
                   );
 
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text("Gasto agregado correctamente"),
                       duration: Duration(seconds: 2),
                       backgroundColor: Colors.green,
@@ -343,7 +374,6 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
 
                   nameController.clear();
                   amountController.clear();
-
                   context.pop();
                 },
                 child: const Text(
@@ -392,7 +422,10 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
                       ),
                       foregroundColor: Colors.white, // borde
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      GroupRepo.deleteGroup(widget.group.id);
+                      context.go("/home");
+                    },
                     child: Text("Confirmar", style: TextStyle(fontSize: 15)),
                   ),
                 ),
@@ -429,63 +462,123 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
     );
   }
 
-  Container spentSummary(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade300, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: Offset(0, 4),
+  Widget spentSummary(BuildContext context, WidgetRef ref, int groupId) {
+    final spentsAsync = ref.watch(spentsProvider);
+
+    return spentsAsync.when(
+      data: (spents) {
+        final groupSpents = spents.where((s) => s.groupId == groupId).toList();
+
+        // Mapa: deudor -> acreedor -> monto
+        final Map<int, Map<int, double>> debts = {};
+
+        for (var spent in groupSpents) {
+          final payerId = spent.userId;
+          final participants = spent.members;
+          final share = spent.amount / participants.length;
+
+          for (var memberId in participants) {
+            if (memberId == payerId) continue;
+
+            debts.putIfAbsent(memberId, () => {});
+            debts[memberId]!.update(
+              payerId,
+              (value) => value + share,
+              ifAbsent: () => share,
+            );
+          }
+        }
+
+        // 🔹 Normalización de deudas
+        final Map<int, Map<int, double>> simplifiedDebts = {};
+
+        debts.forEach((debtorId, creditorMap) {
+          creditorMap.forEach((creditorId, amount) {
+            final opposite = debts[creditorId]?[debtorId] ?? 0.0;
+            final net = amount - opposite;
+
+            if (net > 0) {
+              simplifiedDebts.putIfAbsent(debtorId, () => {});
+              simplifiedDebts[debtorId]![creditorId] = net;
+            }
+          });
+        });
+
+        // 🔹 Generación de widgets
+        List<Widget> debtWidgets = [];
+        simplifiedDebts.forEach((debtorId, creditorMap) {
+          final debtor = UserRepo.getUsersByIdList([debtorId]).first;
+          creditorMap.forEach((creditorId, amount) {
+            final creditor = UserRepo.getUsersByIdList([creditorId]).first;
+            debtWidgets.add(
+              debt(
+                debtor.fullName,
+                creditor.fullName,
+                double.parse(amount.toStringAsFixed(2)), // redondeo
+              ),
+            );
+          });
+        });
+
+        return Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.grey.shade300, width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 8,
+                offset: Offset(0, 4),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Padding(
+            padding: const EdgeInsets.all(18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Resumen de gastos"),
-                HeroIcon(HeroIcons.informationCircle),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Resumen de gastos"),
+                    const Icon(Icons.info_outline),
+                  ],
+                ),
+                const Divider(thickness: 1),
+                if (debtWidgets.isEmpty) const Text("No hay deudas pendientes"),
+                ...debtWidgets,
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: 400,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      foregroundColor: Theme.of(context).primaryColor,
+                      side: BorderSide(
+                        color: Theme.of(context).primaryColor,
+                        width: 1,
+                      ),
+                    ),
+                    onPressed: () {
+                      viewSpentsModalContent(context, ref);
+                    },
+                    child: const Text("Ver Resumen de Gastos"),
+                  ),
+                ),
               ],
             ),
-            Divider(thickness: 1, indent: 0, endIndent: 0),
-            debt("Alicia", "Pedro", 12324),
-            debt("Mariano", "Alicia", 546),
-            debt("Rodrigo", "Lautaro", 7256.24),
-            debt("Lautaro", "Pedro", 927),
-            SizedBox(height: 10),
-            SizedBox(
-              width: 400,
-              height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  foregroundColor: Theme.of(context).primaryColor,
-                  side: BorderSide(
-                    color: Theme.of(context).primaryColor,
-                    width: 1,
-                  ), // borde
-                ),
-                onPressed: () {
-                  viewSpentsModalContent(context, ref);
-                },
-                child: Text("Ver Resumen de Gastos"),
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) =>
+          const Center(child: Text("Error al cargar los gastos")),
     );
   }
 
@@ -663,9 +756,16 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text("$deudor le debe a $cobrador"),
+        // Texto de la deuda, recortando si es muy largo
+        Expanded(
+          child: Text(
+            "$deudor le debe a $cobrador",
+            style: TextStyle(fontWeight: FontWeight.w500),
+          ),
+        ),
+        SizedBox(width: 8), // un pequeño espacio antes del monto
         Text(
-          "\$$monto",
+          "\$${monto.toStringAsFixed(2)}",
           style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
         ),
       ],
@@ -718,6 +818,11 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
             const SizedBox(height: 10),
             Text(
               "Fecha de creación: ${widget.group.createdAt}",
+              style: TextStyle(fontSize: 12),
+            ),
+            SizedBox(height: 10),
+            Text(
+              "Cantidad de integrantes: ${widget.group.members.length}",
               style: TextStyle(fontSize: 12),
             ),
           ],

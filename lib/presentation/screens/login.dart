@@ -1,15 +1,18 @@
+import 'package:divipay/provider/userLoggedProvider.dart';
+import 'package:divipay/repository/userRepo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class Login extends StatefulWidget {
+class Login extends ConsumerStatefulWidget {
   const Login({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  ConsumerState<Login> createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
-  final usernameController = TextEditingController();
+class _LoginState extends ConsumerState<Login> {
+  final emailController = TextEditingController();
 
   final passwordController = TextEditingController();
 
@@ -17,6 +20,8 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    emailController.text = "joarouge@gmail.com";
+    passwordController.text = "1234";
     final primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
       backgroundColor: Colors.white, // Fondo general blanco para profesional
@@ -38,11 +43,11 @@ class _LoginState extends State<Login> {
                   child: Column(
                     children: [
                       TextFormField(
-                        controller: usernameController,
+                        controller: emailController,
                         decoration: InputDecoration(
-                          labelText: "Username",
+                          labelText: "Email",
                           labelStyle: TextStyle(color: primaryColor),
-                          prefixIcon: Icon(Icons.person, color: primaryColor),
+                          prefixIcon: Icon(Icons.email, color: primaryColor),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
@@ -103,7 +108,8 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                           onPressed: () {
-                            if (usernameController.text.isEmpty) {
+                            if (emailController.text.isEmpty ||
+                                passwordController.text.isEmpty) {
                               ScaffoldMessenger.of(context)
                                 ..removeCurrentSnackBar()
                                 ..showSnackBar(
@@ -113,7 +119,25 @@ class _LoginState extends State<Login> {
                                   ),
                                 );
                             } else {
-                              context.go("/home");
+                              if (UserRepo.login(
+                                emailController.text,
+                                passwordController.text,
+                              )) {
+                                context.go("/home");
+                                ref.read(userLogged.notifier).state =
+                                    UserRepo.findUser(emailController.text);
+                              } else {
+                                ScaffoldMessenger.of(context)
+                                  ..removeCurrentSnackBar()
+                                  ..showSnackBar(
+                                    SnackBar(
+                                      backgroundColor: Colors.red,
+                                      content: Text(
+                                        'Incorrect email or password',
+                                      ),
+                                    ),
+                                  );
+                              }
                             }
                           },
                           child: const Text(

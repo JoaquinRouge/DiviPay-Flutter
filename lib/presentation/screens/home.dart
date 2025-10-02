@@ -12,9 +12,12 @@ class Home extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<Home> createState() => _HomeState();
+
 }
 
 class _HomeState extends ConsumerState<Home> {
+        final nameController = TextEditingController();
+    final descriptionController = TextEditingController();
   @override
   void dispose() {
     super.dispose();
@@ -62,8 +65,6 @@ class _HomeState extends ConsumerState<Home> {
   }
 
   Widget createGroupModalContent(BuildContext context) {
-    final nameController = TextEditingController();
-    final descriptionController = TextEditingController();
 
     return Container(
       width: double.infinity,
