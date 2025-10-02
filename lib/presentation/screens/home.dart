@@ -12,12 +12,13 @@ class Home extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<Home> createState() => _HomeState();
-
 }
 
 class _HomeState extends ConsumerState<Home> {
-        final nameController = TextEditingController();
-    final descriptionController = TextEditingController();
+
+  final nameController = TextEditingController();
+  final descriptionController = TextEditingController();
+  
   @override
   void dispose() {
     super.dispose();
@@ -36,9 +37,7 @@ class _HomeState extends ConsumerState<Home> {
           crossAxisCount: 1,
           crossAxisSpacing: 20,
           mainAxisSpacing: 20,
-          children: [
-            ...groups.map((group) => GroupCard(group: group)),
-          ],
+          children: [...groups.map((group) => GroupCard(group: group))],
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -65,7 +64,6 @@ class _HomeState extends ConsumerState<Home> {
   }
 
   Widget createGroupModalContent(BuildContext context) {
-
     return Container(
       width: double.infinity,
       padding: EdgeInsets.only(
@@ -156,15 +154,17 @@ class _HomeState extends ConsumerState<Home> {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("No se puede crear un grupo con nombre o descripción vacía"),
-                        backgroundColor: Colors.red,  
+                        content: Text(
+                          "No se puede crear un grupo con nombre o descripción vacía",
+                        ),
+                        backgroundColor: Colors.red,
                       ),
                     );
                   } else {
                     GroupRepo.addGroup(
                       nameController.text,
                       descriptionController.text,
-                      DateTime.now().toString() 
+                      DateTime.now().toString(),
                     );
 
                     ref.read(groupsProvider.notifier).state = [
@@ -179,7 +179,7 @@ class _HomeState extends ConsumerState<Home> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text("Grupo creado correctamente"),
-                        backgroundColor: Colors.green,  
+                        backgroundColor: Colors.green,
                       ),
                     );
                   }

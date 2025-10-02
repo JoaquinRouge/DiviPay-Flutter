@@ -1,6 +1,8 @@
 import 'package:divipay/core/components/appBar.dart';
+import 'package:divipay/core/components/userSelectableTile.dart';
 import 'package:divipay/domain/Group.dart';
 import 'package:divipay/domain/User.dart';
+import 'package:divipay/provider/groupsProvider.dart';
 import 'package:divipay/provider/spentProvider.dart';
 import 'package:divipay/provider/userLoggedProvider.dart';
 import 'package:divipay/repository/groupRepo.dart';
@@ -246,57 +248,54 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
               endIndent: 12,
             ),
             const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Miembros involucrados",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    final newValue = !isSelectAllActive;
-                    onSelectAllChanged(newValue); // 👈 usa el callback
-                  },
-                  child: isSelectAllActive
-                      ? const Icon(Icons.check_box)
-                      : const Icon(Icons.check_box_outline_blank),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: members.length,
-              itemBuilder: (context, index) {
-                return CheckboxListTile(
-                  title: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Text(
-                      members[index].fullName,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  value: selected[index],
-                  onChanged: (value) {
-                    setModalState(() {
-                      selected[index] = value ?? false;
+            Column(
+              children: members.isNotEmpty
+                  ? [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Miembros involucrados",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              final newValue = !isSelectAllActive;
+                              onSelectAllChanged(
+                                newValue,
+                              );
+                            },
+                            child: isSelectAllActive
+                                ? const Icon(Icons.check_box)
+                                : const Icon(Icons.check_box_outline_blank),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: members.length,
+                        itemBuilder: (context, index) {
+                          return UserSelectableTile(
+                            user: members[index],
+                            isSelected:
+                                selected[index],
+                            onTap: () {
+                              setModalState(() {
+                                selected[index] = !selected[index];
 
-                      // Actualizar el "select all" según el estado de los checkboxes
-                      isSelectAllActive = selected.every(
-                        (element) => element == true,
-                      );
-                    });
-                  },
-                );
-              },
+                                isSelectAllActive = selected.every(
+                                  (e) => e == true,
+                                );
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    ]
+                  : [Text("No hay miembros en este grupo")],
             ),
             const SizedBox(height: 15),
             Divider(
@@ -423,7 +422,7 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
                       foregroundColor: Colors.white, // borde
                     ),
                     onPressed: () {
-                      GroupRepo.deleteGroup(widget.group.id);
+                      ref.read(groupsProvider.notifier).deleteGroup(widget.group.id);
                       context.go("/home");
                     },
                     child: Text("Confirmar", style: TextStyle(fontSize: 15)),
