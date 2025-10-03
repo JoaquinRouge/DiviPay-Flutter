@@ -25,7 +25,7 @@ class _LoginState extends State<Register> {
         toolbarHeight: 60,
         iconTheme: IconThemeData(
           color: Theme.of(context).primaryColor,
-          size: 35
+          size: 35,
         ),
       ),
       body: Center(
@@ -137,7 +137,8 @@ class _LoginState extends State<Register> {
                                 ..showSnackBar(
                                   SnackBar(
                                     backgroundColor: primaryColor,
-                                    content: Text('Please fill all fields'),
+                                    content: Text('Por favor completa todos los campos'),
+                                    behavior: SnackBarBehavior.floating,
                                   ),
                                 );
                             } else {

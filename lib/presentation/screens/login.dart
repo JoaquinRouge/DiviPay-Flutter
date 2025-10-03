@@ -115,7 +115,8 @@ class _LoginState extends ConsumerState<Login> {
                                 ..showSnackBar(
                                   SnackBar(
                                     backgroundColor: primaryColor,
-                                    content: Text('Please fill all fields'),
+                                    content: Text('Por favor completa todos los campos'),
+                                    behavior: SnackBarBehavior.floating,
                                   ),
                                 );
                             } else {
@@ -132,8 +133,9 @@ class _LoginState extends ConsumerState<Login> {
                                   ..showSnackBar(
                                     SnackBar(
                                       backgroundColor: Colors.red,
+                                      behavior: SnackBarBehavior.floating,
                                       content: Text(
-                                        'Incorrect email or password',
+                                        'Email o contraseña incorrectos',
                                       ),
                                     ),
                                   );
