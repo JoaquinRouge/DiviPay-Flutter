@@ -7,7 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons/heroicons.dart';
 
 class AddSpentModal extends ConsumerStatefulWidget {
-  const AddSpentModal({Key? key, required this.members, required this.groupId}) : super(key: key);
+  const AddSpentModal({Key? key, required this.members, required this.groupId})
+    : super(key: key);
 
   final List<User> members;
   final int groupId;
@@ -70,63 +71,69 @@ class _AddSpentModalState extends ConsumerState<AddSpentModal> {
               ),
             ),
             const SizedBox(height: 10),
-            TextFormField(
-              controller: nameController,
-              decoration: InputDecoration(
-                labelText: "Descripción del gasto",
-                labelStyle: TextStyle(color: Theme.of(context).primaryColor),
-                prefixIcon: HeroIcon(
-                  HeroIcons.documentText,
-                  color: Theme.of(context).primaryColor,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: Theme.of(context).primaryColor,
-                    width: 2,
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: amountController,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: InputDecoration(
-                labelText: "Monto",
-                labelStyle: TextStyle(color: Theme.of(context).primaryColor),
-                prefixIcon: HeroIcon(
-                  HeroIcons.currencyDollar,
-                  color: Theme.of(context).primaryColor,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: Theme.of(context).primaryColor,
-                    width: 2,
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
-            Divider(
-              color: Colors.grey,
-              thickness: .5,
-              indent: 12,
-              endIndent: 12,
-            ),
-            const SizedBox(height: 15),
             Column(
               children: widget.members.isNotEmpty
                   ? [
+                      TextFormField(
+                        controller: nameController,
+                        decoration: InputDecoration(
+                          labelText: "Descripción del gasto",
+                          labelStyle: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          prefixIcon: HeroIcon(
+                            HeroIcons.documentText,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).primaryColor,
+                              width: 2,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: amountController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        decoration: InputDecoration(
+                          labelText: "Monto",
+                          labelStyle: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          prefixIcon: HeroIcon(
+                            HeroIcons.currencyDollar,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).primaryColor,
+                              width: 2,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      Divider(
+                        color: Colors.grey,
+                        thickness: .5,
+                        indent: 12,
+                        endIndent: 12,
+                      ),
+                      const SizedBox(height: 15),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -163,108 +170,125 @@ class _AddSpentModalState extends ConsumerState<AddSpentModal> {
                             onTap: () {
                               setState(() {
                                 selected[index] = !selected[index];
-                                isSelectAllActive = selected.every((e) => e == true);
+                                isSelectAllActive = selected.every(
+                                  (e) => e == true,
+                                );
                               });
                             },
                           );
                         },
                       ),
+
+                      const SizedBox(height: 15),
+                      Divider(
+                        color: Colors.grey,
+                        thickness: .5,
+                        indent: 12,
+                        endIndent: 12,
+                      ),
+                      const SizedBox(height: 15),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          onPressed: () {
+                            final selectedMemberIds = <int>[];
+                            final description = nameController.text.trim();
+                            final amountText = amountController.text.trim();
+                            final amount = double.tryParse(amountText) ?? 0.0;
+
+                            if (description.isEmpty || amountText.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Los campos deben estar completos",
+                                  ),
+                                  duration: Duration(seconds: 2),
+                                  backgroundColor: Colors.red,
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                              return;
+                            }
+
+                            if (amount <= 0) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "El monto debe ser mayor que 0",
+                                  ),
+                                  duration: Duration(seconds: 2),
+                                  backgroundColor: Colors.red,
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                              return;
+                            }
+
+                            for (int i = 0; i < widget.members.length; i++) {
+                              if (selected[i]) {
+                                selectedMemberIds.add(widget.members[i].id);
+                              }
+                            }
+
+                            if (selectedMemberIds.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "No se puede crear un gasto sin miembros involucrados.",
+                                  ),
+                                  duration: Duration(seconds: 2),
+                                  backgroundColor: Colors.red,
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                              return;
+                            }
+
+                            spentsNotifier.addSpent(
+                              description,
+                              amount,
+                              ref.read(userLogged)!.id,
+                              widget.groupId,
+                              selectedMemberIds,
+                            );
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Gasto agregado correctamente"),
+                                duration: Duration(seconds: 2),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+
+                            nameController.clear();
+                            amountController.clear();
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            "Agregar Gasto",
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
+                        ),
+                      ),
                     ]
-                  : [const Text("No hay miembros en este grupo")],
-            ),
-            const SizedBox(height: 15),
-            Divider(
-              color: Colors.grey,
-              thickness: .5,
-              indent: 12,
-              endIndent: 12,
-            ),
-            const SizedBox(height: 15),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onPressed: () {
-                  final selectedMemberIds = <int>[];
-                  final description = nameController.text.trim();
-                  final amountText = amountController.text.trim();
-                  final amount = double.tryParse(amountText) ?? 0.0;
-
-                  // VALIDACIONES: no cerramos el modal si hay error; mostramos snackbar y retornamos
-                  if (description.isEmpty || amountText.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Los campos deben estar completos"),
-                        duration: Duration(seconds: 2),
-                        backgroundColor: Colors.red,
-                        behavior: SnackBarBehavior.floating,
+                  : [
+                      Text(
+                        "No hay miembros en el grupo, agregalos antes de crear gastos.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic
+                        ),
                       ),
-                    );
-                    return;
-                  }
-
-                  if (amount <= 0) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("El monto debe ser mayor que 0"),
-                        duration: Duration(seconds: 2),
-                        backgroundColor: Colors.red,
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
-                    return;
-                  }
-
-                  for (int i = 0; i < widget.members.length; i++) {
-                    if (selected[i]) {
-                      selectedMemberIds.add(widget.members[i].id);
-                    }
-                  }
-
-                  if (selectedMemberIds.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("No se puede crear un gasto sin miembros involucrados."),
-                        duration: Duration(seconds: 2),
-                        backgroundColor: Colors.red,
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
-                    return;
-                  }
-
-                  spentsNotifier.addSpent(
-                    description,
-                    amount,
-                    ref.read(userLogged)!.id,
-                    widget.groupId,
-                    selectedMemberIds,
-                  );
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Gasto agregado correctamente"),
-                      duration: Duration(seconds: 2),
-                      behavior: SnackBarBehavior.floating,
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-
-                  nameController.clear();
-                  amountController.clear();
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  "Agregar Gasto",
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-              ),
+                      SizedBox(height: 20),
+                    ],
             ),
           ],
         ),

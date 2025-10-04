@@ -29,16 +29,27 @@ class _HomeState extends ConsumerState<Home> {
 
     return Scaffold(
       appBar: CustomAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: GridView.count(
-          childAspectRatio: 1.3,
-          crossAxisCount: 1,
-          crossAxisSpacing: 20,
-          mainAxisSpacing: 20,
-          children: [...groups.map((group) => GroupCard(group: group))],
-        ),
-      ),
+      body: groups.isNotEmpty
+          ? Padding(
+              padding: const EdgeInsets.all(16),
+              child: GridView.count(
+                childAspectRatio: 1.3,
+                crossAxisCount: 1,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20,
+                children: [...groups.map((group) => GroupCard(group: group))],
+              ),
+            )
+          : Center(
+              child: Text(
+                "No hay grupos para mostrar.",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Theme.of(context).primaryColor,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
