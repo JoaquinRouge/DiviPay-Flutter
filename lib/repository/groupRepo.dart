@@ -5,7 +5,7 @@ class GroupRepo {
   static List<Group> groups = [
     Group(
       id: 1,
-      name: "Vacaciones en Mallorca",
+      name: "Vacaciones en la playa",
       description:
           "Un viaje inolvidable para disfrutar del sol y el mar con los mejores amigos. Planificando gastos de alojamiento, comida, transporte y actividades.",
       balance: 0,

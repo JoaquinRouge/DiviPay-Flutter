@@ -1,4 +1,5 @@
 import 'package:divipay/core/components/debt.dart';
+import 'package:divipay/service/debt_service.dart';
 import 'package:divipay/widgets/spents_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,10 +10,7 @@ import 'package:divipay/provider/spentProvider.dart';
 class SpentSummary extends ConsumerWidget {
   final int groupId;
 
-  const SpentSummary({
-    Key? key,
-    required this.groupId,
-  }) : super(key: key);
+  const SpentSummary({Key? key, required this.groupId}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,50 +18,18 @@ class SpentSummary extends ConsumerWidget {
 
     return spentsAsync.when(
       data: (spents) {
-        final groupSpents = spents.where((s) => s.groupId == groupId).toList();
+        final simplifiedDebts =
+            DebtService.calculateSimplifiedDebts(spents, groupId);
 
-        final Map<int, Map<int, double>> debts = {};
-
-        for (var spent in groupSpents) {
-          final payerId = spent.userId;
-          final participants = spent.members;
-          final share = spent.amount / participants.length;
-
-          for (var memberId in participants) {
-            if (memberId == payerId) continue;
-
-            debts.putIfAbsent(memberId, () => {});
-            debts[memberId]!.update(
-              payerId,
-              (value) => value + share,
-              ifAbsent: () => share,
-            );
-          }
-        }
-
-        final Map<int, Map<int, double>> simplifiedDebts = {};
-
-        debts.forEach((debtorId, creditorMap) {
-          creditorMap.forEach((creditorId, amount) {
-            final opposite = debts[creditorId]?[debtorId] ?? 0.0;
-            final net = amount - opposite;
-
-            if (net > 0) {
-              simplifiedDebts.putIfAbsent(debtorId, () => {});
-              simplifiedDebts[debtorId]![creditorId] = net;
-            }
-          });
-        });
-
-        List<Widget> debtWidgets = [];
+        final List<Widget> debtWidgets = [];
         simplifiedDebts.forEach((debtorId, creditorMap) {
           final debtor = UserRepo.getUsersByIdList([debtorId]).first;
           creditorMap.forEach((creditorId, amount) {
             final creditor = UserRepo.getUsersByIdList([creditorId]).first;
             debtWidgets.add(
               Debt(
-                cobrador: debtor.fullName,
-                deudor: creditor.fullName,
+                cobrador: creditor.fullName,
+                deudor: debtor.fullName,
                 monto: double.parse(amount.toStringAsFixed(2)),
               ),
             );
@@ -99,7 +65,10 @@ class SpentSummary extends ConsumerWidget {
                 ),
                 const Divider(thickness: 1),
                 if (debtWidgets.isEmpty)
-                  const Text("No hay deudas pendientes")
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: const Text("No hay deudas pendientes"),
+                  )
                 else
                   ...debtWidgets,
                 const SizedBox(height: 10),
@@ -119,7 +88,7 @@ class SpentSummary extends ConsumerWidget {
                       ),
                     ),
                     onPressed: () {
-                     SpentsModal.show(context, groupId);
+                      SpentsModal.show(context, groupId);
                     },
                     child: const Text("Ver Resumen de Gastos"),
                   ),
