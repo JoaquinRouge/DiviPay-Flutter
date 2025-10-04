@@ -27,5 +27,7 @@ class SpentRepo {
     return spents;
   }
 
-  static removeSpent(int id) {}
+  static removeSpent(int id) {
+    spents.removeWhere((spent)=> spent.id == id);
+  }
 }

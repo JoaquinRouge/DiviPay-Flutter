@@ -1,19 +1,14 @@
 import 'package:divipay/core/components/dialogs/delete_group_dialog.dart';
 import 'package:divipay/domain/Group.dart';
 import 'package:divipay/widgets/add_friends_modal.dart';
+import 'package:divipay/widgets/add_spent_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 
-// 👇 Estos son propios de tu proyecto
-// (asegúrate de cambiarlos si los archivos están en otra ruta)
-import 'package:divipay/provider/spentProvider.dart';
-import 'package:divipay/repository/userRepo.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 class GroupActionButtons extends StatelessWidget {
-  GroupActionButtons({super.key, required this.group});
+  const GroupActionButtons({super.key, required this.group});
 
-  Group group;
+  final Group group;
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +23,9 @@ class GroupActionButtons extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              foregroundColor: Colors.white, // borde
+              foregroundColor: Colors.white,
             ),
             onPressed: () {
-              final List<bool> selected = List.generate(
-                group.members.length,
-                (_) => false,
-              );
               AddFriendsModal.show(context, group.members, group.id);
             },
             child: Row(
@@ -74,25 +65,10 @@ class GroupActionButtons extends StatelessWidget {
 
                   return StatefulBuilder(
                     builder: (context, setModalState) {
-                      bool isSelectAllActive = selected.every((e) => e);
-                      return Text("data");
-                      //return addSpentModalContent(
-                      //  context,
-                      //  widget.group.members,
-                      //  selected,
-                      //  nameController,
-                      //  amountController,
-                      //  setModalState,
-                      //  isSelectAllActive,
-                      //  (bool newVal) {
-                      //    setModalState(() {
-                      //      isSelectAllActive = newVal;
-                      //      for (int i = 0; i < selected.length; i++) {
-                      //        selected[i] = newVal;
-                      //      }
-                      //    });
-                      //  },
-                      // );
+                      return AddSpentModal(
+                        members: group.members,
+                        groupId: group.id,
+                      );
                     },
                   );
                 },

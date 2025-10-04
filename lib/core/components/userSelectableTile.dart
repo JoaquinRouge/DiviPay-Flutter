@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:divipay/domain/User.dart'; // 👈 importá tu User real
+import 'package:divipay/domain/User.dart';
 
 class UserSelectableTile extends StatelessWidget {
   final User user;

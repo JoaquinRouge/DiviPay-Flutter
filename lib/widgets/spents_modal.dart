@@ -1,5 +1,7 @@
+import 'package:divipay/core/components/dialogs/delete_spent_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:divipay/repository/userRepo.dart';
 import 'package:divipay/provider/spentProvider.dart';
@@ -45,8 +47,9 @@ class SpentsModal extends ConsumerWidget {
                       itemCount: groupSpents.length,
                       itemBuilder: (context, index) {
                         final spent = groupSpents[index];
-                        final spentMembers =
-                            UserRepo.getUsersByIdList(spent.members);
+                        final spentMembers = UserRepo.getUsersByIdList(
+                          spent.members,
+                        );
 
                         return Container(
                           margin: const EdgeInsets.symmetric(
@@ -89,13 +92,27 @@ class SpentsModal extends ConsumerWidget {
                                     ),
                                   ),
                                   const SizedBox(width: 8),
-                                  Text(
-                                    "\$${spent.amount.toStringAsFixed(2)}",
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "\$${spent.amount.toStringAsFixed(2)}",
+                                        style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      GestureDetector(
+                                        onTap: () {
+                                          DeleteSpentDialog.show(
+                                            context,
+                                            spent.id,
+                                          );
+                                        },
+                                        child: HeroIcon(HeroIcons.trash),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -128,9 +145,9 @@ class SpentsModal extends ConsumerWidget {
                                         horizontal: 14,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .primaryColor
-                                            .withOpacity(0.9),
+                                        color: Theme.of(
+                                          context,
+                                        ).primaryColor.withOpacity(0.9),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Text(
