@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 
 class GroupInfo extends StatelessWidget {
-  GroupInfo({super.key, required this.group});
+  const GroupInfo({super.key, required this.group});
 
-  Group group;
+  final Group group;
 
   @override
   Widget build(BuildContext context) {

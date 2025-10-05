@@ -13,12 +13,12 @@ class GroupsNotifier extends StateNotifier<List<Group>> {
 
   void addMembers(int groupId, List<User> users) {
     GroupRepo.addMember(groupId, users);
-    state = GroupRepo.getGroups();
+    state = List.from(GroupRepo.groups);
   }
 
   void addGroup(String name, String description) {
     GroupRepo.addGroup(name, description);
-    state = GroupRepo.getGroups();
+    state = List.from(GroupRepo.groups);
   }
 }
 

@@ -58,10 +58,6 @@ class GroupActionButtons extends StatelessWidget {
                   borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 ),
                 builder: (context) {
-                  final List<bool> selected = List.generate(
-                    group.members.length,
-                    (_) => false,
-                  );
 
                   return StatefulBuilder(
                     builder: (context, setModalState) {
