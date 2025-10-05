@@ -1,5 +1,5 @@
-import 'package:divipay/core/components/appBar.dart';
-import 'package:divipay/core/components/bottomAppBar.dart';
+import 'package:divipay/core/components/app_bar.dart';
+import 'package:divipay/core/components/bottom_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:divipay/domain/Group.dart';
 import 'package:divipay/domain/User.dart';
-import 'package:divipay/repository/groupRepo.dart';
+import 'package:divipay/repository/group_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class GroupsNotifier extends StateNotifier<List<Group>> {
@@ -13,7 +13,12 @@ class GroupsNotifier extends StateNotifier<List<Group>> {
 
   void addMembers(int groupId, List<User> users) {
     GroupRepo.addMember(groupId, users);
-    state = List.from(GroupRepo.groups);
+    state = GroupRepo.getGroups();
+  }
+
+  void addGroup(String name, String description) {
+    GroupRepo.addGroup(name, description);
+    state = GroupRepo.getGroups();
   }
 }
 

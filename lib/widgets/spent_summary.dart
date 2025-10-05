@@ -4,8 +4,8 @@ import 'package:divipay/widgets/spents_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:divipay/repository/userRepo.dart';
-import 'package:divipay/provider/spentProvider.dart';
+import 'package:divipay/repository/user_repo.dart';
+import 'package:divipay/provider/spent_provider.dart';
 
 class SpentSummary extends ConsumerWidget {
   final int groupId;

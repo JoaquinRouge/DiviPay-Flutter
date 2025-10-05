@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:divipay/domain/Spent.dart';
-import 'package:divipay/repository/spentRepo.dart';
+import 'package:divipay/repository/spent_repo.dart';
 
 class SpentsNotifier extends AsyncNotifier<List<Spent>> {
   @override

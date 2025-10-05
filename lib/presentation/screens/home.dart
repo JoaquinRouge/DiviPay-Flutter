@@ -1,10 +1,10 @@
-import 'package:divipay/core/components/appBar.dart';
-import 'package:divipay/core/components/bottomAppBar.dart';
-import 'package:divipay/core/components/groupCard.dart';
-import 'package:divipay/repository/groupRepo.dart';
+import 'package:divipay/core/components/app_bar.dart';
+import 'package:divipay/core/components/bottom_app_bar.dart';
+import 'package:divipay/core/components/group_card.dart';
+import 'package:divipay/repository/group_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:divipay/provider/groupsProvider.dart';
+import 'package:divipay/provider/groups_provider.dart';
 import 'package:heroicons/heroicons.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -171,15 +171,9 @@ class _HomeState extends ConsumerState<Home> {
                       ),
                     );
                   } else {
-                    GroupRepo.addGroup(
-                      nameController.text,
-                      descriptionController.text,
-                      DateTime.now().toString(),
-                    );
-
-                    ref.read(groupsProvider.notifier).state = [
-                      ...GroupRepo.getGroups(),
-                    ];
+                    ref
+                        .read(groupsProvider.notifier)
+                        .addGroup(nameController.text,descriptionController.text);
 
                     nameController.clear();
                     descriptionController.clear();

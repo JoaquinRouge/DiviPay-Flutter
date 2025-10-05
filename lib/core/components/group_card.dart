@@ -1,5 +1,5 @@
 import 'package:divipay/domain/Group.dart';
-import 'package:divipay/provider/spentProvider.dart';
+import 'package:divipay/provider/spent_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

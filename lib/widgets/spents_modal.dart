@@ -2,8 +2,8 @@ import 'package:divipay/core/components/dialogs/delete_spent_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons/heroicons.dart';
-import 'package:divipay/repository/userRepo.dart';
-import 'package:divipay/provider/spentProvider.dart';
+import 'package:divipay/repository/user_repo.dart';
+import 'package:divipay/provider/spent_provider.dart';
 
 class SpentsModal extends ConsumerWidget {
   final int groupId;

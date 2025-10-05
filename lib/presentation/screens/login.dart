@@ -1,5 +1,5 @@
-import 'package:divipay/provider/userLoggedProvider.dart';
-import 'package:divipay/repository/userRepo.dart';
+import 'package:divipay/provider/user_logged_provider.dart';
+import 'package:divipay/repository/user_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

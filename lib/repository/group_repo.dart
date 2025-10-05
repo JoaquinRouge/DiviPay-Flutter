@@ -18,7 +18,7 @@ class GroupRepo {
     return groups;
   }
 
-  static addGroup(String name, String description, String createdAt) {
+  static addGroup(String name, String description) {
     groups.add(
       Group(
         id: groups.length + 1,
@@ -26,7 +26,7 @@ class GroupRepo {
         description: description,
         balance: 0,
         members: [],
-        createdAt: createdAt,
+        createdAt: DateTime.now().toString(),
       ),
     );
   }

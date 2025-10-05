@@ -1,9 +1,9 @@
-import 'package:divipay/core/components/appBar.dart';
+import 'package:divipay/core/components/app_bar.dart';
 import 'package:divipay/domain/Group.dart';
 import 'package:divipay/widgets/group_action_buttons.dart';
 import 'package:divipay/widgets/spent_summary.dart';
 import 'package:flutter/material.dart';
-import 'package:divipay/core/components/bottomAppBar.dart';
+import 'package:divipay/core/components/bottom_app_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:divipay/widgets/group_info.dart';
 

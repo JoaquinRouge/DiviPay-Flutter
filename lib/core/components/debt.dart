@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class Debt extends StatelessWidget {
-  Debt({super.key,required this.cobrador,required this.monto, required this.deudor});
+  const Debt({super.key,required this.cobrador,required this.monto, required this.deudor});
 
-  String deudor;
-  String cobrador;
-  double monto;
+  final String deudor;
+  final String cobrador;
+  final double monto;
 
   @override
   Widget build(BuildContext context) {

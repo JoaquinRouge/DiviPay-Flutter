@@ -1,7 +1,7 @@
-import 'package:divipay/core/components/userSelectableTile.dart';
+import 'package:divipay/core/components/user_selectable_tile.dart';
 import 'package:divipay/domain/User.dart';
-import 'package:divipay/provider/addFriendsProvider.dart';
-import 'package:divipay/provider/groupsProvider.dart';
+import 'package:divipay/provider/add_friends_provider.dart';
+import 'package:divipay/provider/groups_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons/heroicons.dart';
