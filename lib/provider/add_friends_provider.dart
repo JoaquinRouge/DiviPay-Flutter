@@ -3,10 +3,10 @@ import 'package:divipay/repository/user_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddFriendsNotifier extends StateNotifier<List<User>> {
-  AddFriendsNotifier() : super(UserRepo.getUsers());
+  AddFriendsNotifier() : super([]);
 
-  void filterUsers(List<User> users) {
-    final ids = users.map((u) => u.id).toSet();
+  void filterUsers(List<String> users) {
+    final ids = users.map((u) => u).toSet();
     state = state.where((u) => !ids.contains(u.id)).toList();
   }
 }

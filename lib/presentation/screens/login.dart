@@ -1,5 +1,4 @@
-import 'package:divipay/provider/user_logged_provider.dart';
-import 'package:divipay/repository/user_repo.dart';
+import 'package:divipay/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -17,11 +16,12 @@ class _LoginState extends ConsumerState<Login> {
   final passwordController = TextEditingController();
 
   bool showPassword = false;
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
     emailController.text = "joarouge@gmail.com";
-    passwordController.text = "1234";
+    passwordController.text = "123456";
     final primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
       backgroundColor: Colors.white, // Fondo general blanco para profesional
@@ -107,45 +107,42 @@ class _LoginState extends ConsumerState<Login> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          onPressed: () {
-                            if (emailController.text.isEmpty ||
-                                passwordController.text.isEmpty) {
-                              ScaffoldMessenger.of(context)
-                                ..removeCurrentSnackBar()
-                                ..showSnackBar(
-                                  SnackBar(
-                                    backgroundColor: primaryColor,
-                                    content: Text('Por favor completa todos los campos'),
-                                    behavior: SnackBarBehavior.floating,
-                                  ),
-                                );
-                            } else {
-                              if (UserRepo.login(
-                                emailController.text,
-                                passwordController.text,
-                              )) {
-                                context.go("/home");
-                                ref.read(userLogged.notifier).state =
-                                    UserRepo.findUser(emailController.text);
-                              } else {
-                                ScaffoldMessenger.of(context)
-                                  ..removeCurrentSnackBar()
-                                  ..showSnackBar(
-                                    SnackBar(
-                                      backgroundColor: Colors.red,
-                                      behavior: SnackBarBehavior.floating,
-                                      content: Text(
-                                        'Email o contraseña incorrectos',
-                                      ),
-                                    ),
+                          onPressed: () async {
+                            setState(() {
+                              loading = true;
+                            });
+
+                            try {
+                              final user = await ref
+                                  .read(authServiceProvider)
+                                  .login(
+                                    emailController.text,
+                                    passwordController.text,
                                   );
+
+                              if (user != null) {
+                                context.go("/home");
                               }
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(e.toString()),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            } finally {
+                              setState(() => loading = false);
                             }
                           },
-                          child: const Text(
-                            "Login",
-                            style: TextStyle(fontSize: 18, color: Colors.white),
-                          ),
+                          child: loading
+                              ? CircularProgressIndicator()
+                              : Text(
+                                  "Login",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
                         ),
                       ),
                     ],

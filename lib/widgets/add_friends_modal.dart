@@ -1,5 +1,4 @@
 import 'package:divipay/core/components/user_selectable_tile.dart';
-import 'package:divipay/domain/User.dart';
 import 'package:divipay/provider/add_friends_provider.dart';
 import 'package:divipay/provider/groups_provider.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +7,8 @@ import 'package:heroicons/heroicons.dart';
 import 'package:go_router/go_router.dart';
 
 class AddFriendsModal extends ConsumerStatefulWidget {
-  final List<User> members;
-  final int groupId;
+  final List<String> members;
+  final String groupId;
 
   const AddFriendsModal({super.key, required this.members, required this.groupId});
 
@@ -17,7 +16,7 @@ class AddFriendsModal extends ConsumerStatefulWidget {
   AddFriendsModalState createState() => AddFriendsModalState();
 
   /// Método estático para abrir el modal
-  static Future<dynamic> show(BuildContext context, List<User> members, int groupId) {
+  static Future<dynamic> show(BuildContext context, List<String> members, String groupId) {
     return showModalBottomSheet(
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
@@ -37,7 +36,6 @@ class AddFriendsModalState extends ConsumerState<AddFriendsModal> {
   @override
   void initState() {
     super.initState();
-    // Inicializamos el provider solo una vez al abrir el modal
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(addFriendsProvider.notifier).filterUsers(widget.members);
       setState(() {
@@ -79,7 +77,7 @@ class AddFriendsModalState extends ConsumerState<AddFriendsModal> {
                         itemCount: addFriendsList.length,
                         itemBuilder: (context, index) {
                           return UserSelectableTile(
-                            user: addFriendsList[index],
+                            userId: addFriendsList[index].id,
                             isSelected: selected[index],
                             onTap: () {
                               setState(() {
@@ -102,15 +100,12 @@ class AddFriendsModalState extends ConsumerState<AddFriendsModal> {
                             foregroundColor: Colors.white,
                           ),
                           onPressed: () {
-                            final selectedUsers = <User>[];
+                            final selectedUsers = <String>[];
                             for (int i = 0; i < addFriendsList.length; i++) {
-                              if (selected[i]) selectedUsers.add(addFriendsList[i]);
+                              if (selected[i]) selectedUsers.add(addFriendsList[i].id);
                             }
 
-                            ref.read(groupsProvider.notifier).addMembers(
-                                  widget.groupId,
-                                  selectedUsers,
-                                );
+                            ref.read(groupServiceProvider).addMembers(widget.groupId, selectedUsers);
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

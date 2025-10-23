@@ -1,5 +1,5 @@
 import 'package:divipay/domain/Group.dart';
-import 'package:divipay/provider/spent_provider.dart';
+import 'package:divipay/provider/groups_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +16,6 @@ class GroupCard extends ConsumerStatefulWidget {
 }
 
 class _GroupCardState extends ConsumerState<GroupCard> {
-  // Genera un gradient único a partir de la key
   LinearGradient generateGradientFromKey(String key) {
     int hash = key.hashCode;
     final random = Random(hash);
@@ -60,11 +59,8 @@ class _GroupCardState extends ConsumerState<GroupCard> {
 
   @override
   Widget build(BuildContext context) {
-
-    final spentsNotifier = ref.watch(spentsProvider.notifier);
-
-    // Usás tu método
-    final total = spentsNotifier.getTotalAmountForGroupId(widget.group.id);
+    // getTotal devuelve un Future<double?>, usar FutureBuilder para mostrarlo
+    final totalFuture = ref.watch(groupServiceProvider).getTotal(widget.group.id);
 
     return GestureDetector(
       onTap: () => context.push("/detail", extra: widget.group),
@@ -105,9 +101,9 @@ class _GroupCardState extends ConsumerState<GroupCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
+                        widget.group.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        widget.group.name,
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -116,7 +112,7 @@ class _GroupCardState extends ConsumerState<GroupCard> {
                       const SizedBox(height: 4),
                       Text(
                         widget.group.description,
-                        maxLines:2,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 14,
@@ -127,13 +123,32 @@ class _GroupCardState extends ConsumerState<GroupCard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            '\$$total',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).primaryColor,
-                            ),
+                          // Mostrar el total de forma asíncrona
+                          FutureBuilder<double?>(
+                            future: totalFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Text(
+                                  '\$--',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                );
+                              }
+                              final total = (snapshot.hasData && snapshot.data != null)
+                                  ? snapshot.data!
+                                  : 0.0;
+                              return Text(
+                                '\$${total.toStringAsFixed(2)}',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              );
+                            },
                           ),
                           const Icon(
                             CupertinoIcons.arrow_right,

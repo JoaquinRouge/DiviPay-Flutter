@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "794676786069",
+    "project_id": "divipay-559e2",
+    "storage_bucket": "divipay-559e2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:794676786069:android:9e6ee38b690af53920bc9c",
+        "android_client_info": {
+          "package_name": "com.example.divipay"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFnvEItJhaH7xeXLBistohe9CmneObeBk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

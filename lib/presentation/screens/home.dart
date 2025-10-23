@@ -1,6 +1,8 @@
 import 'package:divipay/core/components/app_bar.dart';
 import 'package:divipay/core/components/bottom_app_bar.dart';
 import 'package:divipay/core/components/group_card.dart';
+import 'package:divipay/domain/Group.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:divipay/provider/groups_provider.dart';
@@ -16,6 +18,7 @@ class Home extends ConsumerStatefulWidget {
 class _HomeState extends ConsumerState<Home> {
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
+  final userId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   void dispose() {
@@ -24,31 +27,54 @@ class _HomeState extends ConsumerState<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final groups = ref.watch(groupsProvider);
+    final groupsFuture = ref.watch(groupServiceProvider).getAll(userId);
 
     return Scaffold(
       appBar: CustomAppBar(),
-      body: groups.isNotEmpty
-          ? Padding(
-              padding: const EdgeInsets.all(16),
-              child: GridView.count(
-                childAspectRatio: 1.3,
-                crossAxisCount: 1,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20,
-                children: [...groups.map((group) => GroupCard(group: group))],
-              ),
-            )
-          : Center(
+      body: FutureBuilder(
+        future: groupsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(
               child: Text(
-                "No hay grupos para mostrar.",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).primaryColor,
-                  fontStyle: FontStyle.italic,
-                ),
+                "Error al cargar los grupos: ${snapshot.error}",
+                style: TextStyle(color: Colors.red),
               ),
-            ),
+            );
+          }
+
+          final groups = snapshot.data ?? [];
+
+          return groups.isNotEmpty
+              ? Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: GridView.count(
+                    childAspectRatio: 1.3,
+                    crossAxisCount: 1,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20,
+                    children: groups
+                        .whereType<Group>()
+                        .map((group) => GroupCard(group: group))
+                        .toList(),
+                  ),
+                )
+              : Center(
+                  child: Text(
+                    "No hay grupos para mostrar.",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).primaryColor,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
@@ -157,22 +183,14 @@ class _HomeState extends ConsumerState<Home> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                onPressed: () {
-                  if (nameController.text.isEmpty ||
-                      descriptionController.text.isEmpty) {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "No se puede crear un grupo con nombre o descripción vacía",
-                        ),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  } else {
-                    ref
-                        .read(groupsProvider.notifier)
-                        .addGroup(nameController.text,descriptionController.text);
+                onPressed: () async {
+                  try {
+                    await ref
+                        .read(groupServiceProvider)
+                        .createGroup(
+                          nameController.text,
+                          descriptionController.text,
+                        );
 
                     nameController.clear();
                     descriptionController.clear();
@@ -184,6 +202,15 @@ class _HomeState extends ConsumerState<Home> {
                         content: Text("Grupo creado correctamente"),
                         backgroundColor: Colors.green,
                         behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+
+                    ref.invalidate(groupServiceProvider);
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(e.toString()),
+                        backgroundColor: Colors.red,
                       ),
                     );
                   }

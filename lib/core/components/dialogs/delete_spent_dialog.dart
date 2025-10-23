@@ -1,12 +1,14 @@
-import 'package:divipay/provider/spent_provider.dart';
+import 'package:divipay/provider/groups_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:divipay/domain/Spent.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class DeleteSpentDialog extends ConsumerWidget {
-  final int spentId;
+  final Spent spent;
+  final String groupId;
 
-  const DeleteSpentDialog({super.key, required this.spentId});
+  const DeleteSpentDialog({super.key, required this.spent,required this.groupId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,7 +40,11 @@ class DeleteSpentDialog extends ConsumerWidget {
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () {
-                  ref.read(spentsProvider.notifier).removeSpent(spentId);
+                  ref
+                      .read(groupServiceProvider)
+                      .deleteSpent(groupId, spent);
+
+                      ref.invalidate(groupServiceProvider);
                   context.pop();
                 },
                 child: const Text("Confirmar", style: TextStyle(fontSize: 15)),
@@ -72,12 +78,12 @@ class DeleteSpentDialog extends ConsumerWidget {
     );
   }
 
-  static Future<dynamic> show(BuildContext context, int spentId) {
+  static Future<dynamic> show(BuildContext context, Spent spent, String groupId) {
     return showDialog(
       context: context,
       barrierDismissible: true,
       builder: (context) {
-        return DeleteSpentDialog(spentId: spentId);
+        return DeleteSpentDialog(spent:spent, groupId: groupId);
       },
     );
   }

@@ -1,7 +1,7 @@
 import 'package:divipay/core/components/user_selectable_tile.dart';
-import 'package:divipay/domain/User.dart';
-import 'package:divipay/provider/spent_provider.dart';
-import 'package:divipay/provider/user_logged_provider.dart';
+import 'package:divipay/domain/Spent.dart';
+import 'package:divipay/provider/groups_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons/heroicons.dart';
@@ -10,8 +10,8 @@ class AddSpentModal extends ConsumerStatefulWidget {
   const AddSpentModal({Key? key, required this.members, required this.groupId})
     : super(key: key);
 
-  final List<User> members;
-  final int groupId;
+  final List<String> members;
+  final String groupId;
 
   @override
   ConsumerState<AddSpentModal> createState() => _AddSpentModalState();
@@ -51,7 +51,7 @@ class _AddSpentModalState extends ConsumerState<AddSpentModal> {
 
   @override
   Widget build(BuildContext context) {
-    final spentsNotifier = ref.watch(spentsProvider.notifier);
+    final groupProvider = ref.watch(groupServiceProvider);
 
     return Padding(
       padding: const EdgeInsets.all(12),
@@ -165,7 +165,7 @@ class _AddSpentModalState extends ConsumerState<AddSpentModal> {
                         itemCount: widget.members.length,
                         itemBuilder: (context, index) {
                           return UserSelectableTile(
-                            user: widget.members[index],
+                            userId: widget.members[index],
                             isSelected: selected[index],
                             onTap: () {
                               setState(() {
@@ -198,7 +198,7 @@ class _AddSpentModalState extends ConsumerState<AddSpentModal> {
                             ),
                           ),
                           onPressed: () {
-                            final selectedMemberIds = <int>[];
+                            final selectedMemberIds = <String>[];
                             final description = nameController.text.trim();
                             final amountText = amountController.text.trim();
                             final amount = double.tryParse(amountText) ?? 0.0;
@@ -233,7 +233,7 @@ class _AddSpentModalState extends ConsumerState<AddSpentModal> {
 
                             for (int i = 0; i < widget.members.length; i++) {
                               if (selected[i]) {
-                                selectedMemberIds.add(widget.members[i].id);
+                                selectedMemberIds.add(widget.members[i]);
                               }
                             }
 
@@ -251,13 +251,20 @@ class _AddSpentModalState extends ConsumerState<AddSpentModal> {
                               return;
                             }
 
-                            spentsNotifier.addSpent(
-                              description,
-                              amount,
-                              ref.read(userLogged)!.id,
+                            Spent newSpent = Spent(
+                              description: description,
+                              amount: amount,
+                              userId: FirebaseAuth.instance.currentUser!.uid,
+                              groupId: widget.groupId,
+                              members: selectedMemberIds,
+                            ); 
+
+                            groupProvider.addSpent(
                               widget.groupId,
-                              selectedMemberIds,
+                              newSpent,
                             );
+
+                            ref.invalidate(groupServiceProvider);
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

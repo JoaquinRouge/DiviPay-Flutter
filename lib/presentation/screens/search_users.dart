@@ -1,0 +1,138 @@
+import 'package:divipay/core/components/app_bar.dart';
+import 'package:divipay/domain/User.dart';
+import 'package:divipay/provider/user_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:divipay/core/components/bottom_app_bar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class SearchUsers extends ConsumerStatefulWidget {
+  const SearchUsers({super.key});
+
+  @override
+  ConsumerState<SearchUsers> createState() => _SearchUsersState();
+}
+
+class _SearchUsersState extends ConsumerState<SearchUsers> {
+  final TextEditingController _controller = TextEditingController();
+  String _query = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final usersAsync = ref.watch(userServiceProvider).searchUsersNyName(_query);
+
+    return Scaffold(
+      appBar: CustomAppBar(),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                hintText: 'Buscar Usuarios...',
+                prefixIcon: Icon(Icons.search),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _query = value;
+                });
+              },
+            ),
+          ),
+          Expanded(
+            child: FutureBuilder<List<User>?>(
+              future: usersAsync,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(
+                    child: Text('No se encontraron usuarios.'),
+                  );
+                }
+                final users = snapshot.data!;
+                return GridView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 1,
+                    childAspectRatio: 3,
+                    mainAxisSpacing: 16,
+                  ),
+                  itemCount: users.length,
+                  itemBuilder: (context, index) =>
+                      userFoundCard(users[index], index),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: CustomBottomBar(),
+    );
+  }
+
+  Container userFoundCard(User user, int index) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade300, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  user.username,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  user.email,
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+              ],
+            ),
+            SizedBox(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () {
+                  //ref
+                  //    .read(userServiceProvider)
+                  //    .sendFriendRequest(user.id);
+
+                  ref.read(userServiceProvider).acceptFriendRequest("ayTYLNrD9IXq1cAznO6M");
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Enviar Solicitud", style: TextStyle(fontSize: 11)),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

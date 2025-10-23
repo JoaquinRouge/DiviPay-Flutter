@@ -1,36 +1,66 @@
 import 'package:divipay/core/components/debt.dart';
+import 'package:divipay/provider/groups_provider.dart';
+import 'package:divipay/provider/user_provider.dart';
 import 'package:divipay/service/debt_service.dart';
 import 'package:divipay/widgets/spents_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:divipay/repository/user_repo.dart';
-import 'package:divipay/provider/spent_provider.dart';
-
 class SpentSummary extends ConsumerWidget {
-  final int groupId;
+  final String groupId;
 
   const SpentSummary({Key? key, required this.groupId}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final spentsAsync = ref.watch(spentsProvider);
+    final spentsFuture = ref.watch(groupServiceProvider).getSpents(groupId);
+    final userProvider = ref.watch(userServiceProvider);
+    return FutureBuilder(
+      future: spentsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return const Center(child: Text("Error al cargar los gastos"));
+        } else if (!snapshot.hasData) {
+          return const Center(child: Text("No hay datos de gastos"));
+        }
 
-    return spentsAsync.when(
-      data: (spents) {
-        final simplifiedDebts =
-            DebtService.calculateSimplifiedDebts(spents, groupId);
+        final spents = snapshot.data;
+        final simplifiedDebts = DebtService.calculateSimplifiedDebts(
+          spents ?? []
+        );
 
         final List<Widget> debtWidgets = [];
         simplifiedDebts.forEach((debtorId, creditorMap) {
-          final debtor = UserRepo.getUsersByIdList([debtorId]).first;
           creditorMap.forEach((creditorId, amount) {
-            final creditor = UserRepo.getUsersByIdList([creditorId]).first;
             debtWidgets.add(
-              Debt(
-                cobrador: creditor.fullName,
-                deudor: debtor.fullName,
-                monto: double.parse(amount.toStringAsFixed(2)),
+              FutureBuilder(
+                future: Future.wait([
+                  userProvider.getUsersByIdList([creditorId]),
+                  userProvider.getUsersByIdList([debtorId]),
+                ]),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  final creditorList = snapshot.data![0];
+                  final debtorList = snapshot.data![1];
+
+                  final creditor = creditorList?.isNotEmpty == true
+                      ? creditorList!.first
+                      : null;
+                  final debtor = debtorList?.isNotEmpty == true
+                      ? debtorList!.first
+                      : null;
+
+                  return Debt(
+                    cobrador: creditor?.username ?? "Desconocido",
+                    deudor: debtor?.username ?? "Desconocido",
+                    monto: double.parse(amount.toStringAsFixed(2)),
+                  );
+                },
               ),
             );
             debtWidgets.add(const SizedBox(height: 12));
@@ -98,9 +128,6 @@ class SpentSummary extends ConsumerWidget {
           ),
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, stack) =>
-          const Center(child: Text("Error al cargar los gastos")),
     );
   }
 }

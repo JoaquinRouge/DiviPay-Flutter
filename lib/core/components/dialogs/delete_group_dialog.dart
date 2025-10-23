@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class DeleteGroupDialog extends ConsumerWidget {
-  final int groupId;
+  final String groupId;
 
   const DeleteGroupDialog({super.key, required this.groupId});
 
@@ -40,7 +40,7 @@ class DeleteGroupDialog extends ConsumerWidget {
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () {
-                  ref.read(groupsProvider.notifier).deleteGroup(groupId);
+                  ref.read(groupServiceProvider).deleteGroup(groupId);
                   context.go("/home");
                 },
                 child: const Text("Confirmar", style: TextStyle(fontSize: 15)),
@@ -77,7 +77,7 @@ class DeleteGroupDialog extends ConsumerWidget {
     );
   }
 
-  static Future<dynamic> show(BuildContext context, int groupId) {
+  static Future<dynamic> show(BuildContext context, String groupId) {
     return showDialog(
       context: context,
       barrierDismissible: true,

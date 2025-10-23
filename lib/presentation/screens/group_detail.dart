@@ -29,7 +29,7 @@ class _GroupdetailState extends ConsumerState<Groupdetail> {
           padding: EdgeInsets.all(8),
           child: Column(
             children: [
-              GroupInfo(group: widget.group,),
+              GroupInfo(groupId: widget.group.id,),
               SizedBox(height: 10),
               SpentSummary(groupId:widget.group.id),
               SizedBox(height: 25),

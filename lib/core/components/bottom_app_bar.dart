@@ -18,9 +18,7 @@ class CustomBottomBar extends ConsumerWidget {
     return Container(
       height: 70,
       decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(color: Colors.grey, width: 0.1),
-        ),
+        border: Border(top: BorderSide(color: Colors.grey, width: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -31,7 +29,7 @@ class CustomBottomBar extends ConsumerWidget {
               onTap: () {
                 ref.read(pageProvider.notifier).state = '/home';
               },
-              child: navItem(context, HeroIcons.home, 'Home', '/home', ref),
+              child: navItem(context, HeroIcons.home, 'Inicio', '/home', ref),
             ),
             GestureDetector(
               onTap: () {
@@ -39,8 +37,8 @@ class CustomBottomBar extends ConsumerWidget {
               },
               child: navItem(
                 context,
-                HeroIcons.bell,
-                'Notifications',
+                HeroIcons.magnifyingGlass,
+                'Encontrar',
                 '/notifications',
                 ref,
               ),
@@ -52,7 +50,7 @@ class CustomBottomBar extends ConsumerWidget {
               child: navItem(
                 context,
                 HeroIcons.user,
-                'Profile',
+                'Perfil',
                 '/profile',
                 ref,
               ),
@@ -85,9 +83,7 @@ class CustomBottomBar extends ConsumerWidget {
         Text(
           label,
           style: TextStyle(
-            color: samePage
-                ? Theme.of(context).primaryColor
-                : Colors.grey,
+            color: samePage ? Theme.of(context).primaryColor : Colors.grey,
             fontSize: 11,
           ),
         ),

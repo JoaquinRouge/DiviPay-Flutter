@@ -1,20 +1,22 @@
+import 'package:divipay/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class Register extends StatefulWidget {
+class Register extends ConsumerStatefulWidget {
   const Register({super.key});
 
   @override
-  State<Register> createState() => _LoginState();
+  ConsumerState<Register> createState() => _LoginState();
 }
 
-class _LoginState extends State<Register> {
+class _LoginState extends ConsumerState<Register> {
   final usernameController = TextEditingController();
-
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   bool showPassword = false;
-
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
@@ -46,7 +48,7 @@ class _LoginState extends State<Register> {
                   child: Column(
                     children: [
                       TextFormField(
-                        controller: usernameController,
+                        controller: emailController,
                         decoration: InputDecoration(
                           labelText: "Email",
                           labelStyle: TextStyle(color: primaryColor),
@@ -130,22 +132,35 @@ class _LoginState extends State<Register> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          onPressed: () {
-                            if (usernameController.text.isEmpty) {
-                              ScaffoldMessenger.of(context)
-                                ..removeCurrentSnackBar()
-                                ..showSnackBar(
-                                  SnackBar(
-                                    backgroundColor: primaryColor,
-                                    content: Text('Por favor completa todos los campos'),
-                                    behavior: SnackBarBehavior.floating,
-                                  ),
-                                );
-                            } else {
-                              context.go("/home");
+                          onPressed: () async{
+                            setState(() {
+                              loading = true;
+                            });
+
+                            try {
+                              final user = await ref
+                                  .read(authServiceProvider)
+                                  .register(
+                                    emailController.text,
+                                    usernameController.text,
+                                    passwordController.text,
+                                  );
+
+                              if (user != null) {
+                                context.go("/home");
+                              }
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(e.toString()),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            } finally {
+                              setState(() => loading = false);
                             }
                           },
-                          child: const Text(
+                          child: loading ? CircularProgressIndicator() : Text(
                             "Register",
                             style: TextStyle(fontSize: 18, color: Colors.white),
                           ),

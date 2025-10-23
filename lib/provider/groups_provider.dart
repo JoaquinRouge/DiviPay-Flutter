@@ -1,29 +1,18 @@
-import 'package:divipay/domain/Group.dart';
-import 'package:divipay/domain/User.dart';
+import 'package:divipay/datasource/group_datasource.dart';
 import 'package:divipay/repository/group_repo.dart';
+import 'package:divipay/service/group_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class GroupsNotifier extends StateNotifier<List<Group>> {
-  GroupsNotifier() : super(GroupRepo.groups);
+final groupDataSourceProvider = Provider((ref) => GroupDatasource());
+final groupRepositoryProvider = Provider(
+  (ref) => GroupRepo(ref.watch(groupDataSourceProvider)),
+);
+final groupServiceProvider = Provider(
+  (ref) => GroupService(ref.watch(groupRepositoryProvider)),
+);
 
-  void deleteGroup(int id) {
-    GroupRepo.deleteGroup(id);
-    state = state.where((g) => g.id != id).toList();
-  }
-
-  void addMembers(int groupId, List<User> users) {
-    GroupRepo.addMember(groupId, users);
-    state = List.from(GroupRepo.groups);
-  }
-
-  void addGroup(String name, String description) {
-    GroupRepo.addGroup(name, description);
-    state = List.from(GroupRepo.groups);
-  }
-}
-
-final groupsProvider = StateNotifierProvider<GroupsNotifier, List<Group>>((
-  ref,
-) {
-  return GroupsNotifier();
+final spentsProvider = FutureProvider.family((ref, String groupId) {
+  final groupService = ref.watch(groupServiceProvider);
+  print("HACIENDO EL LLAMADO!!!");
+  return groupService.getSpents(groupId);
 });

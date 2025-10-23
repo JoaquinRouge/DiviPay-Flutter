@@ -1,45 +1,58 @@
+import 'package:divipay/datasource/group_datasource.dart';
 import 'package:divipay/domain/Group.dart';
-import 'package:divipay/domain/User.dart';
+import 'package:divipay/domain/Spent.dart';
 
 class GroupRepo {
-  static List<Group> groups = [
-    Group(
-      id: 1,
-      name: "Vacaciones en la playa",
-      description:
-          "Un viaje inolvidable para disfrutar del sol y el mar con los mejores amigos. Planificando gastos de alojamiento, comida, transporte y actividades.",
-      balance: 0,
-      members: [],
-      createdAt: "13 de Abril de 2025",
-    ),
-  ];
+  final GroupDatasource groupDatasource;
 
-  static List<Group> getGroups() {
-    return groups;
+  GroupRepo(this.groupDatasource);
+
+  Future<Group?> getById(String id) async{
+    return await groupDatasource.getById(id);
   }
 
-  static addGroup(String name, String description) {
-    groups.add(
-      Group(
-        id: groups.length + 1,
-        name: name,
-        description: description,
-        balance: 0,
-        members: [],
-        createdAt: DateTime.now().toString(),
-      ),
-    );
+  Future<List<Group?>> getGroups(String userId) async {
+    return await groupDatasource.getAll(userId);
   }
 
-  static addMember(int groupId, List<User> users) {
-    final group = groups.firstWhere((g) => g.id == groupId);
-
-    for (User u in users) {
-      group.members.add(u);
-    }
+  Future<void> createGroup(String name, String description) async {
+    await groupDatasource.createGroup(name, description);
   }
 
-  static deleteGroup(int groupId) {
-    groups.removeWhere((group) => group.id == groupId);
+  Future<void> updateGroup(String id, String name, String description) async {
+    await groupDatasource.update(id, name, description);
+  }
+
+  Future<void> addMembers(String groupId, List<String> members) async {
+    await groupDatasource.addMembers(groupId, members);
+  }
+
+  Future<void> addSpent(String groupId, Spent spent) async {
+    await groupDatasource.addSpent(groupId, spent);
+  }
+
+  Future<List<Spent>?> getSpents(String groupId) async {
+    return await groupDatasource.getSpents(groupId);
+  }
+
+  Future<void> deleteSpent(String groupId, Spent spent) async {
+    await groupDatasource.deleteSpent(groupId, spent);
+  }
+
+  Future<void> removeMember(String groupId, String userId) async {
+    await groupDatasource.removeMember(groupId, userId);
+  }
+
+  Future<void> updateOwner(String groupId, String newOwnerId) async {
+    await groupDatasource.updateOwner(groupId, newOwnerId);
+  }
+
+  Future<double?> getTotal(String groupId) async {
+    final total = await groupDatasource.getTotal(groupId);
+    return total ?? 0.0;
+  }
+
+  Future<void> deleteGroup(String groupId) async {
+    await groupDatasource.delete(groupId);
   }
 }
