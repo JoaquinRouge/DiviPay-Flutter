@@ -15,7 +15,7 @@ class _LoginState extends ConsumerState<Login> {
 
   final passwordController = TextEditingController();
 
-  bool showPassword = false;
+  bool showPassword = true;
   bool loading = false;
 
   @override
@@ -24,7 +24,7 @@ class _LoginState extends ConsumerState<Login> {
     passwordController.text = "123456";
     final primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
-      backgroundColor: Colors.white, // Fondo general blanco para profesional
+      backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),

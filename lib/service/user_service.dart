@@ -1,3 +1,4 @@
+import 'package:divipay/domain/FriendRequest.dart';
 import 'package:divipay/domain/User.dart';
 import 'package:divipay/repository/user_repo.dart';
 
@@ -24,5 +25,21 @@ class UserService {
 
   Future<void> acceptFriendRequest(String requestUid) async {
     return await userRepository.acceptFriendRequest(requestUid);
+  }
+
+  Future<void> declineFriendRequest(String requestUid) async {
+    return await userRepository.declineFriendRequest(requestUid);
+  }
+
+  Future<bool> requestPending(String userId) async {
+    return await userRepository.requestPending(userId);
+  }
+
+  Stream<List<FriendRequest>> getFriendRequests() {
+    return userRepository.getFriendRequests();
+  }
+
+  Future<List<String>> getFriendsIds() async {
+    return userRepository.getFriendsIds();
   }
 }

@@ -39,8 +39,8 @@ class GroupRepo {
     await groupDatasource.deleteSpent(groupId, spent);
   }
 
-  Future<void> removeMember(String groupId, String userId) async {
-    await groupDatasource.removeMember(groupId, userId);
+  Future<void> removeMember(String groupId) async {
+    await groupDatasource.removeMember(groupId);
   }
 
   Future<void> updateOwner(String groupId, String newOwnerId) async {

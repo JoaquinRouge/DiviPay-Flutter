@@ -1,4 +1,5 @@
 import 'package:divipay/core/components/dialogs/delete_group_dialog.dart';
+import 'package:divipay/core/components/dialogs/leave_group_dialog.dart';
 import 'package:divipay/domain/Group.dart';
 import 'package:divipay/widgets/add_friends_modal.dart';
 import 'package:divipay/widgets/add_spent_modal.dart';
@@ -29,7 +30,7 @@ class GroupActionButtons extends StatelessWidget {
               AddFriendsModal.show(context, group.members, group.id);
             },
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 HeroIcon(HeroIcons.userPlus, size: 30),
                 SizedBox(width: 10),
@@ -58,7 +59,6 @@ class GroupActionButtons extends StatelessWidget {
                   borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 ),
                 builder: (context) {
-
                   return StatefulBuilder(
                     builder: (context, setModalState) {
                       return AddSpentModal(
@@ -72,7 +72,7 @@ class GroupActionButtons extends StatelessWidget {
             },
 
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 HeroIcon(HeroIcons.plusCircle, size: 30),
                 SizedBox(width: 10),
@@ -97,11 +97,36 @@ class GroupActionButtons extends StatelessWidget {
               DeleteGroupDialog.show(context, group.id);
             },
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 HeroIcon(HeroIcons.trash, size: 30),
                 SizedBox(width: 10),
                 Text("Eliminar grupo", style: TextStyle(fontSize: 15)),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 10),
+        SizedBox(
+          width: 400,
+          height: 50,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              foregroundColor: Colors.black,
+            ),
+            onPressed: () {
+              LeaveGroupDialog.show(context, group.id);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                HeroIcon(HeroIcons.arrowRightStartOnRectangle, size: 30),
+                SizedBox(width: 10),
+                Text("Abandonar grupo", style: TextStyle(fontSize: 15)),
               ],
             ),
           ),

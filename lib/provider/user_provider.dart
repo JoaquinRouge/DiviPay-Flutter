@@ -9,3 +9,9 @@ final userRepositoryProvider =
     Provider((ref) => UserRepo(ref.watch(userDataSourceProvider)));
 final userServiceProvider =
     Provider((ref) => UserService(ref.watch(userRepositoryProvider)));
+
+final incomingFriendRequestsProvider =
+    StreamProvider((ref) {
+  final userService = ref.watch(userServiceProvider);
+  return userService.getFriendRequests();
+});

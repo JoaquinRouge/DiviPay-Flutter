@@ -74,6 +74,10 @@ class _SearchUsersState extends ConsumerState<SearchUsers> {
   }
 
   Container userFoundCard(User user, int index) {
+    final requestSendedFuture = ref
+        .read(userServiceProvider)
+        .requestPending(user.id);
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -106,29 +110,51 @@ class _SearchUsersState extends ConsumerState<SearchUsers> {
                 ),
               ],
             ),
-            SizedBox(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  foregroundColor: Colors.white,
-                ),
-                onPressed: () {
-                  //ref
-                  //    .read(userServiceProvider)
-                  //    .sendFriendRequest(user.id);
+            FutureBuilder<bool>(
+              future: requestSendedFuture,
+              builder: (context, snapshot) {
+                bool? data = snapshot.data;
 
-                  ref.read(userServiceProvider).acceptFriendRequest("ayTYLNrD9IXq1cAznO6M");
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Enviar Solicitud", style: TextStyle(fontSize: 11)),
-                  ],
-                ),
-              ),
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator(); // Mientras carga
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (data == true) {
+                  return Text(
+                    'Solicitud Pendiente',
+                    style: TextStyle(fontSize: 11, color: Colors.green),
+                  );
+                } else {
+                  return SizedBox(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () {
+                        ref
+                            .read(userServiceProvider)
+                            .sendFriendRequest(user.id);
+
+                        setState(() {
+                          ref
+                              .read(userServiceProvider)
+                              .requestPending(user.id);
+                        });
+
+                        //ref.read(userServiceProvider).acceptFriendRequest("ayTYLNrD9IXq1cAznO6M");
+                      },
+                      child: Text(
+                        "Enviar Solicitud",
+                        style: TextStyle(fontSize: 11),
+                      ),
+                    ),
+                  );
+                }
+              },
             ),
           ],
         ),

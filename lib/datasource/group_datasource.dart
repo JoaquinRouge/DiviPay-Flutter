@@ -73,16 +73,37 @@ class GroupDatasource {
 
   Future<void> addSpent(String id, Spent spent) async {
     await firebaseInstance.doc(id).update({
-      'spents': FieldValue.arrayUnion([
-        spent.toMap()
-      ]),
+      'spents': FieldValue.arrayUnion([spent.toMap()]),
     });
   }
 
-  Future<void> removeMember(String groupId, String userId) async {
+  Future<void> removeMember(String groupId) async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+
+    final groupRef = firebaseInstance.doc(groupId);
+    final group = await groupRef.get();
+
+    final data = group.data();
+
     await firebaseInstance.doc(groupId).update({
       'members': FieldValue.arrayRemove([userId]),
     });
+
+    final updatedSnap = await groupRef.get();
+    final updatedData = updatedSnap.data();
+
+    final members = List<String>.from(updatedData?['members']);
+
+    if (members.isEmpty) {
+      await delete(groupId);
+      return;
+    }
+
+    if (data?['ownerId'] == userId) {
+      await firebaseInstance.doc(groupId).update({
+        'ownerId': updatedData?['members'][0],
+      });
+    }
   }
 
   Future<List<Spent>?> getSpents(String groupId) async {

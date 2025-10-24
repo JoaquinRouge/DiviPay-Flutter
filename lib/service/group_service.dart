@@ -44,8 +44,8 @@ class GroupService {
     return await repository.getSpents(groupId);
   } 
 
-  Future<void> removeMember(String groupId, String userId) async {
-    await repository.removeMember(groupId,userId);
+  Future<void> removeMember(String groupId) async {
+    await repository.removeMember(groupId);
   }
 
   Future<void> updateOwner(String groupId, String newOwnerId) async {

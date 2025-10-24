@@ -1,5 +1,4 @@
 import 'package:divipay/domain/User.dart';
-import 'package:divipay/repository/user_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddFriendsNotifier extends StateNotifier<List<User>> {

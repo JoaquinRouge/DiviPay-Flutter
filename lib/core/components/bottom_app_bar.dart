@@ -33,12 +33,24 @@ class CustomBottomBar extends ConsumerWidget {
             ),
             GestureDetector(
               onTap: () {
-                ref.read(pageProvider.notifier).state = '/notifications';
+                ref.read(pageProvider.notifier).state = '/search_users';
               },
               child: navItem(
                 context,
                 HeroIcons.magnifyingGlass,
                 'Encontrar',
+                '/search_users',
+                ref,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                ref.read(pageProvider.notifier).state = '/notifications';
+              },
+              child: navItem(
+                context,
+                HeroIcons.envelope,
+                'Solicitudes',
                 '/notifications',
                 ref,
               ),
