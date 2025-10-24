@@ -63,7 +63,7 @@ class _GroupCardState extends ConsumerState<GroupCard> {
     final totalFuture = ref.watch(groupServiceProvider).getTotal(widget.group.id);
 
     return GestureDetector(
-      onTap: () => context.push("/detail", extra: widget.group),
+      onTap: () => context.push("/detail", extra: widget.group.id),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(

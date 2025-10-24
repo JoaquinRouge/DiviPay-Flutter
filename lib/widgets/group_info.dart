@@ -1,36 +1,16 @@
-import 'package:divipay/provider/groups_provider.dart';
+import 'package:divipay/domain/Group.dart';
 import 'package:divipay/widgets/update_group_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons/heroicons.dart';
 
 class GroupInfo extends ConsumerWidget {
-  const GroupInfo({super.key, required this.groupId});
+  const GroupInfo({super.key, required this.group});
 
-  final String groupId;
+  final Group group;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final groupFuture = ref.watch(groupServiceProvider).getById(groupId);
-
-    return FutureBuilder(
-      future: groupFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (snapshot.hasError) {
-          return Center(
-            child: Text(
-              "Error al cargar el grupo: ${snapshot.error}",
-              style: const TextStyle(color: Colors.red),
-            ),
-          );
-        }
-
-        final group = snapshot.data!;
-
         return Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -114,7 +94,6 @@ class GroupInfo extends ConsumerWidget {
             ),
           ),
         );
-      },
-    );
+      }
   }
-}
+

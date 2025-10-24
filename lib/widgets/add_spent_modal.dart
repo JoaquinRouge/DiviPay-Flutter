@@ -257,6 +257,7 @@ class _AddSpentModalState extends ConsumerState<AddSpentModal> {
                               userId: FirebaseAuth.instance.currentUser!.uid,
                               groupId: widget.groupId,
                               members: selectedMemberIds,
+                              date: DateTime.now()
                             ); 
 
                             groupProvider.addSpent(

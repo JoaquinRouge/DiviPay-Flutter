@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Spent {
   Spent({
     required this.description,
     required this.amount,
     required this.userId,
     required this.groupId,
-    required this.members
+    required this.members,
+    required this.date,
   });
 
   String description;
@@ -12,6 +15,7 @@ class Spent {
   String userId;
   String groupId;
   List<String> members;
+  DateTime date;
 
   factory Spent.fromMap(Map<String, dynamic> map) {
     return Spent(
@@ -20,6 +24,7 @@ class Spent {
       userId: map['userId'] as String,
       groupId: map['groupId'] as String,
       members: List<String>.from(map['members'] as List),
+      date: (map['date'] as Timestamp).toDate()
     );
   }
 
@@ -30,6 +35,7 @@ class Spent {
       'userId': userId,
       'groupId': groupId,
       'members': members,
+      'date': date
     };
   }
 }

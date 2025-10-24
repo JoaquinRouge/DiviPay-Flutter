@@ -6,12 +6,14 @@ import 'package:divipay/domain/Group.dart';
 class GroupDatasource {
   final firebaseInstance = FirebaseFirestore.instance.collection('groups');
 
-  Future<Group?> getById(String id) async {
-    final doc = await firebaseInstance.doc(id).get();
-    if (doc.exists) {
-      return Group.fromMap(doc.id, doc.data()!);
-    }
-    return null;
+  Stream<Group?> getById(String id) {
+    return firebaseInstance.doc(id).snapshots().map((doc) {
+      if (doc.exists) {
+        return Group.fromMap(doc.id, doc.data()!);
+      } else {
+        return null;
+      }
+    });
   }
 
   Future<List<Group>> getAll(String userId) async {

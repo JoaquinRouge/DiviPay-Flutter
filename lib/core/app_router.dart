@@ -33,8 +33,8 @@ final GoRouter routerApp = GoRouter(
     GoRoute(
       path: "/detail",
       pageBuilder: (context, state) {
-        final group = state.extra as Group;
-        return noTransitionPage(Groupdetail(group: group), state);
+        final groupId = state.extra as String;
+        return noTransitionPage(Groupdetail(groupId: groupId), state);
       },
     ),
     GoRoute(

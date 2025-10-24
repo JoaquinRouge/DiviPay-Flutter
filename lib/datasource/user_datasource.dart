@@ -35,9 +35,13 @@ class UserDatasource {
         .where('username', isLessThanOrEqualTo: query + '\uf8ff')
         .get();
 
+    final List<String?> blackList = await getFriendsIds();
+
+    blackList.add(currentUid);
+
     return querySnapshot.docs
         .map((doc) => User.fromMap(doc.data()))
-        .where((user) => user.id != currentUid)
+        .where((user) => !blackList.contains(user.id))
         .toList();
   }
 

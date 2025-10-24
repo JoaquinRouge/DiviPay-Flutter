@@ -7,8 +7,8 @@ class GroupRepo {
 
   GroupRepo(this.groupDatasource);
 
-  Future<Group?> getById(String id) async{
-    return await groupDatasource.getById(id);
+  Stream<Group?> getById(String id) {
+    return groupDatasource.getById(id);
   }
 
   Future<List<Group?>> getGroups(String userId) async {

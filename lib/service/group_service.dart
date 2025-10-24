@@ -7,8 +7,8 @@ class GroupService {
 
   GroupService(this.repository);
 
-  Future<Group?> getById(String id) async{
-    return await repository.getById(id);
+  Stream<Group?> getById(String id) {
+    return repository.getById(id);
   }
 
   Future<List<Group?>> getAll(String userId) async {
