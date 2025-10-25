@@ -15,7 +15,7 @@ class GroupActionButtons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isOwner = group.ownerId != FirebaseAuth.instance.currentUser?.uid;
+    final isOwner = group.ownerId == FirebaseAuth.instance.currentUser?.uid;
 
     return Column(
       children: [
@@ -25,6 +25,7 @@ class GroupActionButtons extends ConsumerWidget {
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).primaryColor,
+              side: BorderSide(color: Colors.black, width: 1),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -50,6 +51,7 @@ class GroupActionButtons extends ConsumerWidget {
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).primaryColor,
+              side: BorderSide(color: Colors.black, width: 1),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -93,6 +95,7 @@ class GroupActionButtons extends ConsumerWidget {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 176, 49, 40),
+                side: BorderSide(color: Colors.black, width: 1),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -119,6 +122,7 @@ class GroupActionButtons extends ConsumerWidget {
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
+              side: BorderSide(color: Colors.black, width: 1),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),

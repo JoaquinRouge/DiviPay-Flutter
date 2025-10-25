@@ -20,7 +20,6 @@ class AddFriendsModal extends ConsumerStatefulWidget {
   @override
   AddFriendsModalState createState() => AddFriendsModalState();
 
-  /// Método estático para abrir el modal
   static Future<dynamic> show(
     BuildContext context,
     List<String> members,
@@ -41,30 +40,25 @@ class AddFriendsModal extends ConsumerStatefulWidget {
 
 class AddFriendsModalState extends ConsumerState<AddFriendsModal> {
   late List<bool> selected = [];
+  late Future<List<String>> _allFriendsFuture;
 
   @override
   void initState() {
     super.initState();
+    _allFriendsFuture = ref.read(userServiceProvider).getFriendsIds();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(addFriendsProvider.notifier).filterUsers(widget.members);
-      setState(() {
-        selected = List.generate(
-          ref.read(addFriendsProvider).length,
-          (_) => false,
-        );
-      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final addFriendsList = ref.read(userServiceProvider).getFriendsIds();
-
     return Padding(
       padding: const EdgeInsets.all(18),
       child: SingleChildScrollView(
-        child: FutureBuilder(
-          future: addFriendsList,
+        child: FutureBuilder<List<String>>(
+          future: _allFriendsFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
@@ -98,84 +92,87 @@ class AddFriendsModalState extends ConsumerState<AddFriendsModal> {
                     ),
                   ),
                 ),
-                Column(
-                  children: addFriendsList.isNotEmpty
-                      ? [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: addFriendsList.length,
-                            itemBuilder: (context, index) {
-                              return UserSelectableTile(
-                                userId: addFriendsList[index],
-                                isSelected: selected[index],
-                                onTap: () {
-                                  setState(() {
-                                    selected[index] = !selected[index];
-                                  });
-                                },
-                              );
+                if (addFriendsList.isNotEmpty)
+                  Column(
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: addFriendsList.length,
+                        itemBuilder: (context, index) {
+                          return UserSelectableTile(
+                            userId: addFriendsList[index],
+                            isSelected: selected[index],
+                            onTap: () {
+                              setState(() {
+                                selected[index] = !selected[index];
+                              });
                             },
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: 400,
+                        height: 50,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            foregroundColor: Colors.white,
                           ),
-                          const SizedBox(height: 16),
-                          SizedBox(
-                            width: 400,
-                            height: 50,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Theme.of(context).primaryColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                foregroundColor: Colors.white,
-                              ),
-                              onPressed: () {
-                                final selectedUsers = <String>[];
-                                for (
-                                  int i = 0;
-                                  i < addFriendsList.length;
-                                  i++
-                                ) {
-                                  if (selected[i])
-                                    selectedUsers.add(addFriendsList[i]);
-                                }
+                          onPressed: () {
+                            final selectedUsers = <String>[];
+                            for (int i = 0; i < addFriendsList.length; i++) {
+                              if (selected[i]) selectedUsers.add(addFriendsList[i]);
+                            }
 
-                                ref
-                                    .read(groupServiceProvider)
-                                    .addMembers(widget.groupId, selectedUsers);
+                            if (selectedUsers.isNotEmpty) {
+                              ref
+                                  .read(groupServiceProvider)
+                                  .addMembers(widget.groupId, selectedUsers);
 
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      "Miembros agregados correctamente",
-                                    ),
-                                    duration: Duration(seconds: 2),
-                                    behavior: SnackBarBehavior.floating,
-                                    backgroundColor: Colors.green,
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Miembros agregados correctamente",
                                   ),
-                                );
+                                  duration: Duration(seconds: 2),
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            }
 
-                                context.pop();
-                              },
-                              child: const Text(
-                                "Añadir",
-                                style: TextStyle(fontSize: 15),
-                              ),
-                            ),
+                            context.pop();
+                          },
+                          child: const Text(
+                            "Añadir",
+                            style: TextStyle(fontSize: 15),
                           ),
-                        ]
-                      : [
-                          Text(
-                            "Nada que hacer por aquí...",
-                            style: TextStyle(
-                              fontStyle: FontStyle.italic,
-                              color: Theme.of(context).primaryColor,
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                        ],
-                ),
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "No hay amigos disponibles",
+                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "Ninguno de tus amigos está disponible para agregar a este grupo.",
+                        style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
               ],
             );
           },
@@ -184,3 +181,4 @@ class AddFriendsModalState extends ConsumerState<AddFriendsModal> {
     );
   }
 }
+

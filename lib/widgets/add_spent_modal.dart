@@ -53,6 +53,10 @@ class _AddSpentModalState extends ConsumerState<AddSpentModal> {
   Widget build(BuildContext context) {
     final groupProvider = ref.watch(groupServiceProvider);
 
+    final members = widget.members.where(
+      (id) => id != FirebaseAuth.instance.currentUser?.uid,
+    ).toList();
+
     return Padding(
       padding: const EdgeInsets.all(12),
       child: SingleChildScrollView(
@@ -72,7 +76,7 @@ class _AddSpentModalState extends ConsumerState<AddSpentModal> {
             ),
             const SizedBox(height: 10),
             Column(
-              children: widget.members.isNotEmpty
+              children: members.isNotEmpty
                   ? [
                       TextFormField(
                         controller: nameController,
@@ -162,10 +166,10 @@ class _AddSpentModalState extends ConsumerState<AddSpentModal> {
                       ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: widget.members.length,
+                        itemCount: members.length,
                         itemBuilder: (context, index) {
                           return UserSelectableTile(
-                            userId: widget.members[index],
+                            userId: members[index],
                             isSelected: selected[index],
                             onTap: () {
                               setState(() {
@@ -231,9 +235,9 @@ class _AddSpentModalState extends ConsumerState<AddSpentModal> {
                               return;
                             }
 
-                            for (int i = 0; i < widget.members.length; i++) {
+                            for (int i = 0; i < members.length; i++) {
                               if (selected[i]) {
-                                selectedMemberIds.add(widget.members[i]);
+                                selectedMemberIds.add(members[i]);
                               }
                             }
 
@@ -257,13 +261,10 @@ class _AddSpentModalState extends ConsumerState<AddSpentModal> {
                               userId: FirebaseAuth.instance.currentUser!.uid,
                               groupId: widget.groupId,
                               members: selectedMemberIds,
-                              date: DateTime.now()
-                            ); 
-
-                            groupProvider.addSpent(
-                              widget.groupId,
-                              newSpent,
+                              date: DateTime.now(),
                             );
+
+                            groupProvider.addSpent(widget.groupId, newSpent);
 
                             ref.invalidate(groupServiceProvider);
 
@@ -289,13 +290,16 @@ class _AddSpentModalState extends ConsumerState<AddSpentModal> {
                     ]
                   : [
                       Text(
-                        "No hay miembros en el grupo, agregalos antes de crear gastos.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontStyle: FontStyle.italic
-                        ),
+                        "No hay miembros suficientes en el grupo",
+                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 8),
+                      Text(
+                        "Agrega amigos al grupo para poder registrar gastos juntos.",
+                        style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 16),
                     ],
             ),
           ],

@@ -18,8 +18,22 @@ class Notifications extends ConsumerWidget {
       body: incomingRequests.when(
         data: (requests) {
           if (requests.isEmpty) {
-            return const Center(
-              child: Text('No tienes solicitudes pendientes.'),
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                HeroIcon(HeroIcons.envelope, size: 80, color: Colors.grey[400],),
+                const SizedBox(height: 16),
+                Text(
+                  "No tienes solicitudes pendientes",
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Cuando alguien te envíe una solicitud, aparecerá aquí.",
+                  style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             );
           }
 

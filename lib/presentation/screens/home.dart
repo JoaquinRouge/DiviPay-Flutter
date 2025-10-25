@@ -63,15 +63,26 @@ class _HomeState extends ConsumerState<Home> {
                         .toList(),
                   ),
                 )
-              : Center(
-                  child: Text(
-                    "No hay grupos para mostrar.",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context).primaryColor,
-                      fontStyle: FontStyle.italic,
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    HeroIcon(
+                      HeroIcons.userGroup,
+                      size: 80,
+                      color: Colors.grey[400],
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "No tienes grupos aún",
+                      style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Crea un grupo o únete a alguno para empezar a compartir gastos.",
+                      style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 );
         },
       ),

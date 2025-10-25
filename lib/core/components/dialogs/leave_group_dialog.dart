@@ -19,7 +19,7 @@ class LeaveGroupDialog extends ConsumerWidget {
         textAlign: TextAlign.center,
       ),
       content: const Text(
-        "Deberás ser invitado nuevamente para volver a unirte.En caso de ser el propietario, tu cargo será reasignado. Si sos el último miembro, el grupo será eliminado. Esta acción no se puede deshacer.",
+        "Deberás ser invitado nuevamente para volver a unirte. En caso de ser el propietario, tu cargo será reasignado. Si sos el último miembro, el grupo será eliminado. Esta acción no se puede deshacer.",
         style: TextStyle(fontSize: 14),
         textAlign: TextAlign.center,
       ),

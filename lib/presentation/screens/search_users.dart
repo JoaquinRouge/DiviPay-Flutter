@@ -4,6 +4,7 @@ import 'package:divipay/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:divipay/core/components/bottom_app_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:heroicons/heroicons.dart';
 
 class SearchUsers extends ConsumerStatefulWidget {
   const SearchUsers({super.key});
@@ -48,8 +49,27 @@ class _SearchUsersState extends ConsumerState<SearchUsers> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(
-                    child: Text('No se encontraron usuarios.'),
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      HeroIcon(
+                        HeroIcons.magnifyingGlass,
+                        size: 80,
+                        style: HeroIconStyle.outline,
+                        color: Colors.grey[400],
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        "No se encontraron usuarios",
+                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "Intenta con otro nombre o revisa tu conexión a internet.",
+                        style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   );
                 }
                 final users = snapshot.data!;
@@ -140,9 +160,7 @@ class _SearchUsersState extends ConsumerState<SearchUsers> {
                             .sendFriendRequest(user.id);
 
                         setState(() {
-                          ref
-                              .read(userServiceProvider)
-                              .requestPending(user.id);
+                          ref.read(userServiceProvider).requestPending(user.id);
                         });
 
                         //ref.read(userServiceProvider).acceptFriendRequest("ayTYLNrD9IXq1cAznO6M");

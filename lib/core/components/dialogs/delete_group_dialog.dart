@@ -21,7 +21,7 @@ class DeleteGroupDialog extends ConsumerWidget {
         textAlign: TextAlign.center,
       ),
       content: const Text(
-        "¿Estás seguro que querés eliminar este grupo? Esta accion es irreversible.",
+        "¿Estás seguro que querés eliminar este grupo? Esta acción es irreversible.",
         style: TextStyle(fontSize: 14),
         textAlign: TextAlign.center,
       ),
