@@ -1,3 +1,4 @@
+import 'package:divipay/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -14,6 +15,8 @@ class CustomBottomBar extends ConsumerWidget {
         context.go(next);
       }
     });
+
+    final notificationListener = ref.watch(incomingFriendRequestsProvider);
 
     return Container(
       height: 70,
@@ -47,12 +50,45 @@ class CustomBottomBar extends ConsumerWidget {
               onTap: () {
                 ref.read(pageProvider.notifier).state = '/notifications';
               },
-              child: navItem(
-                context,
-                HeroIcons.envelope,
-                'Solicitudes',
-                '/notifications',
-                ref,
+              child: notificationListener.when(
+                data: (requests) {
+                  if (requests.isEmpty) {
+                    return navItem(
+                      context,
+                      HeroIcons.envelope,
+                      'Solicitudes',
+                      '/notifications',
+                      ref,
+                    );
+                  } else {
+                    return Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        navItem(
+                          context,
+                          HeroIcons.envelope,
+                          'Solicitudes',
+                          '/notifications',
+                          ref,
+                        ),
+                        Positioned(
+                          right: 15,
+                          top: 0,
+                          child: Container(
+                            width: 12,
+                            height: 12,
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (e, _) => Center(child: Text('Error: $e')),
               ),
             ),
             GestureDetector(
@@ -103,3 +139,12 @@ class CustomBottomBar extends ConsumerWidget {
     );
   }
 }
+
+
+//navItem(
+//                context,
+ //               HeroIcons.envelope,
+//                'Solicitudes',
+//                '/notifications',
+//                ref,
+//              ),

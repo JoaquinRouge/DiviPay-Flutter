@@ -1,4 +1,3 @@
-import 'package:divipay/domain/Group.dart';
 import 'package:divipay/presentation/screens/group_detail.dart';
 import 'package:divipay/presentation/screens/notifications.dart';
 import 'package:divipay/presentation/screens/search_users.dart';
