@@ -2,7 +2,7 @@ import 'package:divipay/core/components/debt.dart';
 import 'package:divipay/provider/groups_provider.dart';
 import 'package:divipay/provider/user_provider.dart';
 import 'package:divipay/service/debt_service.dart';
-import 'package:divipay/widgets/spents_modal.dart';
+import 'package:divipay/widgets/modal/spents_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -42,4 +42,12 @@ class UserRepo {
   Future<List<String>> getFriendsIds() async {
     return datasource.getFriendsIds();
   }
+
+  Future<void> changeUsername(String newUsername) async {
+    return await datasource.changeUsername(newUsername);
+  }
+
+  Future<void> changePassword(String newPassword) async {
+    await datasource.changePassword(newPassword);
+  }
 }

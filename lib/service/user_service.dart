@@ -42,4 +42,16 @@ class UserService {
   Future<List<String>> getFriendsIds() async {
     return userRepository.getFriendsIds();
   }
+
+  Future<void> changeUsername(String newUsername) async {
+    if (newUsername.isEmpty) {
+      throw Exception("El nombre de usuario esta vacio");
+    }
+
+    await userRepository.changeUsername(newUsername);
+  }
+
+  Future<void> changePassword(String newPassword) async {
+    await userRepository.changePassword(newPassword);
+  }
 }

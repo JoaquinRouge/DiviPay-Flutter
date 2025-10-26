@@ -1,8 +1,8 @@
 import 'package:divipay/core/components/dialogs/delete_group_dialog.dart';
 import 'package:divipay/core/components/dialogs/leave_group_dialog.dart';
 import 'package:divipay/domain/Group.dart';
-import 'package:divipay/widgets/add_friends_modal.dart';
-import 'package:divipay/widgets/add_spent_modal.dart';
+import 'package:divipay/widgets/modal/add_friends_modal.dart';
+import 'package:divipay/widgets/modal/add_spent_modal.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

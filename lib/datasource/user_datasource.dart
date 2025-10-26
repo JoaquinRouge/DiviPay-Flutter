@@ -137,4 +137,29 @@ class UserDatasource {
 
     return friendsIds;
   }
+
+  Future<void> changeUsername(String newUsername) async {
+    final currentUid = fb_auth.FirebaseAuth.instance.currentUser?.uid;
+
+    final searchUsers = await firebaseUsers
+        .where('username', isEqualTo: newUsername)
+        .get();
+
+    final usernameTaken = searchUsers.docs;
+
+    if (usernameTaken.isNotEmpty) {
+      throw Exception("El nombre de usuario ya esta en uso.");
+    }
+
+    await firebaseUsers.doc(currentUid).update({'username': newUsername});
+  }
+
+  Future<void> changePassword(String newPassword) async {
+    final user = fb_auth.FirebaseAuth.instance.currentUser!;
+    try {
+      await user.updatePassword(newPassword);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
