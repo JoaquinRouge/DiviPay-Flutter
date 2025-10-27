@@ -1,8 +1,8 @@
-import 'dart:math';
 import 'package:divipay/core/components/dialogs/delete_spent_dialog.dart';
 import 'package:divipay/domain/User.dart';
 import 'package:divipay/provider/groups_provider.dart';
 import 'package:divipay/provider/user_provider.dart';
+import 'package:divipay/service/profile_picture_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons/heroicons.dart';
@@ -64,9 +64,14 @@ class SpentsModal extends ConsumerWidget {
                     itemCount: groupSpents.length,
                     itemBuilder: (context, index) {
                       final spent = groupSpents[index];
+
+                      final List<String> members = [spent.userId];
+
+                      members.addAll(spent.members);
+
                       final spentMembers = ref
                           .watch(userServiceProvider)
-                          .getUsersByIdList(spent.members);
+                          .getUsersByIdList(members);
 
                       return spentCard(spent, context, spentMembers, groupId);
                     },
@@ -90,12 +95,6 @@ class SpentsModal extends ConsumerWidget {
       "d 'de' MMMM, yyyy",
       'es_ES',
     ).format(spent.date);
-
-    Color _colorFromName(String name) {
-      final random = Random(name.hashCode);
-      final hue = random.nextInt(360);
-      return HSLColor.fromAHSL(1, hue.toDouble(), 0.45, 0.55).toColor();
-    }
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
@@ -155,11 +154,11 @@ class SpentsModal extends ConsumerWidget {
                   ),
                   const SizedBox(width: 6),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       DeleteSpentDialog.show(context, spent, groupId);
                     },
                     child: HeroIcon(HeroIcons.trash),
-                  )
+                  ),
                 ],
               ),
             ],
@@ -208,38 +207,7 @@ class SpentsModal extends ConsumerWidget {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: members.map<Widget>((user) {
-                    final color = _colorFromName(user.username);
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 12.0),
-                      child: Column(
-                        children: [
-                          CircleAvatar(
-                            radius: 18,
-                            backgroundColor: color.withOpacity(0.9),
-                            child: Text(
-                              user.username[0].toUpperCase(),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          SizedBox(
-                            width: 60,
-                            child: Text(
-                              user.username,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.black87,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                    return ProfilePictureService.smallPicture(user.username);
                   }).toList(),
                 ),
               );

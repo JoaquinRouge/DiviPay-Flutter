@@ -80,6 +80,24 @@ class UserDatasource {
     );
   }
 
+  Future<void> cancelFriendship(String userId) async {
+    final currentUid = fb_auth.FirebaseAuth.instance.currentUser?.uid;
+
+    final snapshot = await firebaseInstance
+        .collection('friends')
+        .where('friends', arrayContains: userId)
+        .get();
+
+    for (var doc in snapshot.docs) {
+      final friends = List<String>.from(doc['friends']);
+
+      if (friends.contains(currentUid) && friends.contains(userId)) {
+        await doc.reference.delete();
+        return;
+      }
+    }
+  }
+
   Future<bool> requestPending(String userId) async {
     final currentUid = fb_auth.FirebaseAuth.instance.currentUser?.uid;
 

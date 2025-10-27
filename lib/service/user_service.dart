@@ -54,4 +54,8 @@ class UserService {
   Future<void> changePassword(String newPassword) async {
     await userRepository.changePassword(newPassword);
   }
+
+  Future<void> cancelFriendship(String userId) async {
+    await userRepository.cancelFriendship(userId);
+  }
 }

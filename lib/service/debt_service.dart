@@ -6,7 +6,7 @@ class DebtService {
   static Map<String, Map<String, double>> calculateSimplifiedDebts(List<Spent> groupSpents) {
     final Map<String, Map<String, double>> debts = {};
 
-    // 1️⃣ Calcular cuánto debe cada participante al pagador de cada gasto
+    // Calcular cuánto debe cada participante al pagador de cada gasto
     for (var spent in groupSpents) {
       final payerId = spent.userId;
 
@@ -27,7 +27,7 @@ class DebtService {
       }
     }
 
-    // 2️⃣ Simplificar las deudas (A le debe a B y B a A se compensan)
+    // Simplificar las deudas (A le debe a B y B a A se compensan)
     final Map<String, Map<String, double>> simplifiedDebts = {};
 
     debts.forEach((debtorId, creditorMap) {

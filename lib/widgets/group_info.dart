@@ -3,6 +3,7 @@ import 'package:divipay/widgets/modal/update_group_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:intl/intl.dart';
 
 class GroupInfo extends ConsumerWidget {
   const GroupInfo({super.key, required this.group});
@@ -82,7 +83,7 @@ class GroupInfo extends ConsumerWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  "Fecha de creación: ${group.createdAt}",
+                  "Creación: ${DateFormat("d 'de' MMMM 'de' y, HH:mm", 'es_ES').format(group.createdAt)}",
                   style: const TextStyle(fontSize: 12),
                 ),
                 const SizedBox(height: 10),

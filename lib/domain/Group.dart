@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:divipay/domain/Spent.dart';
 
 class Group {
@@ -17,7 +18,7 @@ class Group {
   String description;
   List<Spent> spents;
   List<String> members;
-  String createdAt;
+  DateTime createdAt;
 
   Map<String, dynamic> toMap() {
     return {
@@ -39,7 +40,7 @@ factory Group.fromMap(String id, Map<String, dynamic> map) {
     description: map['description'] ?? '',
     spents: (map['spents'] as List<dynamic>? ?? []).map((e) => Spent.fromMap(e)).toList(),
     members: (map['members'] as List<dynamic>? ?? []).cast<String>(),
-    createdAt: map['createdAt'] ?? '',
+    createdAt: (map['createdAt'] as Timestamp).toDate(),
   );
 }
 

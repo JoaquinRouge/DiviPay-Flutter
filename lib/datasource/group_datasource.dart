@@ -54,7 +54,7 @@ class GroupDatasource {
       description: description,
       spents: [],
       members: [user.uid],
-      createdAt: DateTime.now().toIso8601String(),
+      createdAt: DateTime.now(),
     );
 
     await newGroupRef.set(group.toMap());

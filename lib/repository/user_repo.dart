@@ -50,4 +50,8 @@ class UserRepo {
   Future<void> changePassword(String newPassword) async {
     await datasource.changePassword(newPassword);
   }
+
+  Future<void> cancelFriendship(String userId) async {
+    await datasource.cancelFriendship(userId);
+  }
 }

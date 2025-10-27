@@ -8,10 +8,10 @@ class ChangeUsernameModal extends ConsumerStatefulWidget {
   const ChangeUsernameModal({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ChangeUsernameModal> createState() => _AddSpentModalState();
+  ConsumerState<ChangeUsernameModal> createState() => _ChangeUsernameModalState();
 }
 
-class _AddSpentModalState extends ConsumerState<ChangeUsernameModal> {
+class _ChangeUsernameModalState extends ConsumerState<ChangeUsernameModal> {
   final usernameController = TextEditingController();
 
   @override

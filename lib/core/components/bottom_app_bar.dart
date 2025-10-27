@@ -87,7 +87,13 @@ class CustomBottomBar extends ConsumerWidget {
                     );
                   }
                 },
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () => navItem(
+                  context,
+                  HeroIcons.envelope,
+                  'Solicitudes',
+                  '/notifications',
+                  ref,
+                ),
                 error: (e, _) => Center(child: Text('Error: $e')),
               ),
             ),
