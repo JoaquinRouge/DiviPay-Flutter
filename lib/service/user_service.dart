@@ -3,9 +3,7 @@ import 'package:divipay/domain/User.dart';
 import 'package:divipay/repository/user_repo.dart';
 
 class UserService {
-  final UserRepo userRepository;
-
-  UserService(this.userRepository);
+  final UserRepo userRepository = UserRepo();
 
   Future<User?> getById(String id) async {
     return await userRepository.getById(id);
@@ -57,5 +55,9 @@ class UserService {
 
   Future<void> cancelFriendship(String userId) async {
     await userRepository.cancelFriendship(userId);
+  }
+
+  Future<void> addImageUrl(String imageUrl) async {
+    await userRepository.addImageUrl(imageUrl);
   }
 }

@@ -4,6 +4,7 @@ import 'package:divipay/core/components/dialogs/logout_dialog.dart';
 import 'package:divipay/provider/user_provider.dart';
 import 'package:divipay/service/profile_picture_service.dart';
 import 'package:divipay/widgets/modal/change_password_modal.dart';
+import 'package:divipay/widgets/modal/change_profile_picture_modal.dart';
 import 'package:divipay/widgets/modal/change_username_modal.dart';
 import 'package:divipay/widgets/modal/friends_list_modal.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,7 +17,6 @@ class Profile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final currentUserUid = FirebaseAuth.instance.currentUser!.uid;
     final user = ref.watch(userServiceProvider).getById(currentUserUid);
 
@@ -45,7 +45,13 @@ class Profile extends ConsumerWidget {
                         ),
                         child: Padding(
                           padding: EdgeInsets.all(25),
-                          child: ProfilePictureService.buildUserInfo(user.username, user.email,70,50,30),
+                          child: ProfilePictureService.buildUserInfo(
+                            user.username,
+                            user.email,
+                            70,
+                            50,
+                            30,
+                          ),
                         ),
                       ),
                       SizedBox(height: 20),
@@ -88,6 +94,52 @@ class Profile extends ConsumerWidget {
                               SizedBox(width: 10),
                               Text(
                                 "Cambiar nombre de usuario",
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      SizedBox(
+                        width: 400,
+                        height: 50,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromARGB(255, 233, 233, 235),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            foregroundColor: Colors.black,
+                          ),
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(20),
+                                ),
+                              ),
+                              builder: (context) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom: MediaQuery.of(
+                                      context,
+                                    ).viewInsets.bottom,
+                                  ),
+                                  child: ChangeProfilePictureModal(),
+                                );
+                              },
+                            );
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              HeroIcon(HeroIcons.photo, size: 30),
+                              SizedBox(width: 10),
+                              Text(
+                                "Cambiar foto de perfil",
                                 style: TextStyle(fontSize: 15),
                               ),
                             ],

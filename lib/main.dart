@@ -5,16 +5,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'firebase_options.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await initializeDateFormatting('es_ES', null);
-  runApp(const ProviderScope(
-    child:MainApp()
-  ));
+
+  await Supabase.initialize(
+    url: 'https://qkppcsbnfgmgsjphopno.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrcHBjc2JuZmdtZ3NqcGhvcG5vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NTAwMjksImV4cCI6MjA3NzIyNjAyOX0.JqZwXrSSuXTzs6yCredR0JkPNAEJBJgcJB7CcuIySJw',
+  );
+  runApp(const ProviderScope(child: MainApp()));
 }
 
 class MainApp extends StatelessWidget {
@@ -35,9 +38,7 @@ class MainApp extends StatelessWidget {
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
-        textTheme: GoogleFonts.interTextTheme(
-          Theme.of(context).textTheme,
-        ),
+        textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme),
       ),
       routerConfig: routerApp,
     );

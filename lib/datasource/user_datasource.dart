@@ -180,4 +180,12 @@ class UserDatasource {
       rethrow;
     }
   }
+
+  Future<void> addImageUrl(String imageUrl) async {
+    final userId = fb_auth.FirebaseAuth.instance.currentUser?.uid;
+
+    await firebaseUsers.doc(userId).update({
+      'profileImageUrl':imageUrl
+    });
+  }
 }

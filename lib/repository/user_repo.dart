@@ -3,9 +3,7 @@ import 'package:divipay/domain/FriendRequest.dart';
 import 'package:divipay/domain/User.dart';
 
 class UserRepo {
-  final UserDatasource datasource;
-
-  UserRepo(this.datasource);
+  final UserDatasource datasource = UserDatasource();
 
   Future<User?> getById(String id) async {
     return await datasource.getById(id);
@@ -53,5 +51,9 @@ class UserRepo {
 
   Future<void> cancelFriendship(String userId) async {
     await datasource.cancelFriendship(userId);
+  }
+
+  Future<void> addImageUrl(String imageUrl) async {
+    await datasource.addImageUrl(imageUrl);
   }
 }

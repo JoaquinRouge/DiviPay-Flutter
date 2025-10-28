@@ -1,5 +1,6 @@
 import 'package:divipay/presentation/screens/group_detail.dart';
 import 'package:divipay/presentation/screens/notifications.dart';
+import 'package:divipay/presentation/screens/prueba_supabase.dart';
 import 'package:divipay/presentation/screens/search_users.dart';
 import 'package:divipay/presentation/screens/profile.dart';
 import 'package:divipay/presentation/screens/register.dart';
@@ -13,14 +14,18 @@ Page<dynamic> noTransitionPage(Widget child, GoRouterState state) {
     key: state.pageKey,
     child: child,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      return child; // 👈 sin animación
+      return child;
     },
   );
 }
 
 final GoRouter routerApp = GoRouter(
-  initialLocation: "/login",
+  initialLocation: "/home",
   routes: [
+    GoRoute(
+      path: "/upload",
+      pageBuilder: (context, state) => noTransitionPage(PruebaSupabase(), state),
+    ),
     GoRoute(
       path: "/login",
       pageBuilder: (context, state) => noTransitionPage(Login(), state),

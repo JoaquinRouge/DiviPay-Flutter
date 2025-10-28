@@ -41,29 +41,29 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyArOI2atIm0LE3jvZ9CCZg3Cvl8B-9ZfNQ',
-    appId: '1:794676786069:web:7b2cea8c79a284e120bc9c',
-    messagingSenderId: '794676786069',
-    projectId: 'divipay-559e2',
-    authDomain: 'divipay-559e2.firebaseapp.com',
-    storageBucket: 'divipay-559e2.firebasestorage.app',
-    measurementId: 'G-9H1K1MZZEC',
+    apiKey: 'AIzaSyBHn083Nj6Q-V2HoGiErUydYfZxe9Z1Q0E',
+    appId: '1:391206802141:web:120ef794b7baf612e98134',
+    messagingSenderId: '391206802141',
+    projectId: 'divipay-8483d',
+    authDomain: 'divipay-8483d.firebaseapp.com',
+    storageBucket: 'divipay-8483d.firebasestorage.app',
+    measurementId: 'G-8PRV2Q6K74',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBFnvEItJhaH7xeXLBistohe9CmneObeBk',
-    appId: '1:794676786069:android:9e6ee38b690af53920bc9c',
-    messagingSenderId: '794676786069',
-    projectId: 'divipay-559e2',
-    storageBucket: 'divipay-559e2.firebasestorage.app',
+    apiKey: 'AIzaSyCmrmbeB-DboDpD7VbGtzpLE07rd4LFXlE',
+    appId: '1:391206802141:android:a66e15bec96254a4e98134',
+    messagingSenderId: '391206802141',
+    projectId: 'divipay-8483d',
+    storageBucket: 'divipay-8483d.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCUlX1-dKWUJBpdd7n0bLavkmqYY6XQASQ',
-    appId: '1:794676786069:ios:b0e2e507a7acd13020bc9c',
-    messagingSenderId: '794676786069',
-    projectId: 'divipay-559e2',
-    storageBucket: 'divipay-559e2.firebasestorage.app',
+    apiKey: 'AIzaSyBEOKuCQCaw87694CIqOJXalTfqZ7VzpFE',
+    appId: '1:391206802141:ios:99af8eac7d3ce496e98134',
+    messagingSenderId: '391206802141',
+    projectId: 'divipay-8483d',
+    storageBucket: 'divipay-8483d.firebasestorage.app',
     iosBundleId: 'com.example.divipay',
   );
 

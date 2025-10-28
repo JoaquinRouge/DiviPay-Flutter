@@ -1,17 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:io';
-import 'package:divipay/datasource/firebase_storage_datasource.dart';
+import 'dart:typed_data';
+import 'package:divipay/datasource/storage_datasource.dart';
 
 class StorageRepository {
-  final FirebaseStorageDatasource datasource = FirebaseStorageDatasource();
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final StorageDataSource datasource = StorageDataSource();
 
-  Future<String> uploadProfilePicture(String userId, File imageFile) async {
-    final imageUrl = datasource.uploadProfilePicture(userId, imageFile);
-
-    await firestore.collection('users').doc(userId).update({
-      'photoUrl': imageUrl,
-    });
+  Future<String> uploadProfilePicture(Uint8List fileBytes, String userId) async {
+    final imageUrl = datasource.uploadProfilePicture(fileBytes,userId);
 
     return imageUrl;
   }
