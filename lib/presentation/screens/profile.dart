@@ -48,6 +48,7 @@ class Profile extends ConsumerWidget {
                           child: ProfilePictureService.buildUserInfo(
                             user.username,
                             user.email,
+                            user.profileImageUrl,
                             70,
                             50,
                             30,

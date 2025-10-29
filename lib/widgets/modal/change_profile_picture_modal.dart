@@ -1,4 +1,5 @@
 import 'package:divipay/provider/storage_provider.dart';
+import 'package:divipay/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -41,7 +42,40 @@ class ChangeProfilePictureModal extends ConsumerWidget {
                       ),
                     ),
                     onPressed: () async {
-                      pickImage(false, ref);
+                      final success = await pickImage(false, ref);
+
+                      if (success) {
+                        context.pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text('Foto de perfil actualizada'),
+                            behavior: SnackBarBehavior.floating,
+                            margin: const EdgeInsets.all(16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            backgroundColor: Colors.green,
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
+                        ref.invalidate(userServiceProvider);
+                      } else {
+                        context.pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text(
+                              'Operacion cancelada',
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                            margin: const EdgeInsets.all(16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            backgroundColor: Colors.red,
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
+                      }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -88,6 +122,7 @@ class ChangeProfilePictureModal extends ConsumerWidget {
                             duration: const Duration(seconds: 2),
                           ),
                         );
+                        ref.invalidate(userServiceProvider);
                       } else {
                         context.pop();
                         ScaffoldMessenger.of(context).showSnackBar(

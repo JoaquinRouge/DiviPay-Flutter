@@ -1,4 +1,5 @@
 import 'package:divipay/provider/auth_provider.dart';
+import 'package:divipay/provider/page_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -122,6 +123,7 @@ class _LoginState extends ConsumerState<Login> {
 
                               if (user != null) {
                                 context.go("/home");
+                                ref.read(pageProvider.notifier).state = '/home';
                               }
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(

@@ -6,6 +6,7 @@ class ProfilePictureService {
   static Widget buildUserInfo(
     String username,
     String email,
+    String profileImageUrl,
     double radius,
     double imageFontSize,
     double usernameFontSize,
@@ -14,18 +15,25 @@ class ProfilePictureService {
 
     return Column(
       children: [
-        CircleAvatar(
-          radius: radius,
-          backgroundColor: color.withOpacity(0.9),
-          child: Text(
-            username[0].toUpperCase(),
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: imageFontSize,
-            ),
-          ),
-        ),
+        profileImageUrl.isEmpty
+            ? CircleAvatar(
+                radius: radius,
+                backgroundColor: color.withOpacity(0.9),
+                child: Text(
+                  username[0].toUpperCase(),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: imageFontSize,
+                  ),
+                ),
+              )
+            : CircleAvatar(
+                radius: radius, // tamaño del círculo
+                backgroundImage: NetworkImage(profileImageUrl),
+                backgroundColor:
+                    Colors.grey[200], // color de fondo mientras carga
+              ),
         const SizedBox(height: 4),
         SizedBox(
           child: Text(
@@ -49,22 +57,29 @@ class ProfilePictureService {
     );
   }
 
-  static Padding smallPicture(String username) {
+  static Padding smallPicture(String username, String profileImageUrl) {
     return Padding(
       padding: const EdgeInsets.only(right: 12.0),
       child: Column(
         children: [
-          CircleAvatar(
-            radius: 18,
-            backgroundColor: colorFromName(username).withOpacity(0.9),
-            child: Text(
-              username[0].toUpperCase(),
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+          profileImageUrl.isEmpty
+              ? CircleAvatar(
+                  radius: 18,
+                  backgroundColor: colorFromName(username).withOpacity(0.9),
+                  child: Text(
+                    username[0].toUpperCase(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
+              : CircleAvatar(
+                  radius: 18,
+                  backgroundImage: NetworkImage(profileImageUrl),
+                  backgroundColor:
+                      Colors.grey[200],
+                ),
           const SizedBox(height: 4),
           SizedBox(
             width: 60,

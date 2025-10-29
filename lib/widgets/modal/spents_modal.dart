@@ -207,7 +207,7 @@ class SpentsModal extends ConsumerWidget {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: members.map<Widget>((user) {
-                    return ProfilePictureService.smallPicture(user.username);
+                    return ProfilePictureService.smallPicture(user.username,user.profileImageUrl);
                   }).toList(),
                 ),
               );

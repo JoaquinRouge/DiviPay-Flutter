@@ -92,7 +92,7 @@ class _FriendsListModalState extends ConsumerState<FriendsListModal> {
           children: [
             Row(
               children: [
-                ProfilePictureService.smallPicture(u.username),
+                ProfilePictureService.smallPicture(u.username,u.profileImageUrl),
                 Text(u.email),
               ],
             ),

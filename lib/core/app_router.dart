@@ -4,6 +4,7 @@ import 'package:divipay/presentation/screens/prueba_supabase.dart';
 import 'package:divipay/presentation/screens/search_users.dart';
 import 'package:divipay/presentation/screens/profile.dart';
 import 'package:divipay/presentation/screens/register.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import '../presentation/screens/login.dart';
 import '../presentation/screens/home.dart';
@@ -19,12 +20,15 @@ Page<dynamic> noTransitionPage(Widget child, GoRouterState state) {
   );
 }
 
+final user = FirebaseAuth.instance.currentUser;
+
 final GoRouter routerApp = GoRouter(
-  initialLocation: "/home",
+  initialLocation: user != null ? '/home' : '/login',
   routes: [
     GoRoute(
       path: "/upload",
-      pageBuilder: (context, state) => noTransitionPage(PruebaSupabase(), state),
+      pageBuilder: (context, state) =>
+          noTransitionPage(PruebaSupabase(), state),
     ),
     GoRoute(
       path: "/login",
