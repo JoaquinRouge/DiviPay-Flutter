@@ -1,5 +1,7 @@
 import 'package:divipay/provider/auth_provider.dart';
 import 'package:divipay/provider/page_provider.dart';
+import 'package:divipay/service/auth_error_messages_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -125,10 +127,22 @@ class _LoginState extends ConsumerState<Login> {
                                 context.go("/home");
                                 ref.read(pageProvider.notifier).state = '/home';
                               }
-                            } catch (e) {
+                            } on FirebaseAuthException catch (e) {
+                              String message =
+                                  AuthErrorMessagesService.getAuthErrorMessage(
+                                    e.code,
+                                  );
+
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(e.toString()),
+                                  content: Text(message),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            } on ArgumentError catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(e.message.toString()),
                                   backgroundColor: Colors.red,
                                 ),
                               );

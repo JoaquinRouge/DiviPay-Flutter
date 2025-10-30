@@ -65,13 +65,21 @@ class GroupActionButtons extends ConsumerWidget {
                   borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 ),
                 builder: (context) {
-                  return StatefulBuilder(
-                    builder: (context, setModalState) {
-                      return AddSpentModal(
-                        members: group.members,
-                        groupId: group.id,
-                      );
-                    },
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(
+                        context,
+                      ).viewInsets.bottom, // 👈 eleva con el teclado
+                    ),
+
+                    child: StatefulBuilder(
+                      builder: (context, setModalState) {
+                        return AddSpentModal(
+                          members: group.members,
+                          groupId: group.id,
+                        );
+                      },
+                    ),
                   );
                 },
               );
