@@ -79,8 +79,7 @@ class GroupDatasource {
     });
   }
 
-  Future<void> removeMember(String groupId) async {
-    final userId = FirebaseAuth.instance.currentUser?.uid;
+  Future<void> removeMember(String userId, String groupId) async {
 
     final groupRef = firebaseInstance.doc(groupId);
     final group = await groupRef.get();

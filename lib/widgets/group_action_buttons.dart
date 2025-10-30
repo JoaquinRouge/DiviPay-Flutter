@@ -3,6 +3,7 @@ import 'package:divipay/core/components/dialogs/leave_group_dialog.dart';
 import 'package:divipay/domain/Group.dart';
 import 'package:divipay/widgets/modal/add_friends_modal.dart';
 import 'package:divipay/widgets/modal/add_spent_modal.dart';
+import 'package:divipay/widgets/modal/remove_member_modal.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,6 +45,60 @@ class GroupActionButtons extends ConsumerWidget {
             ),
           ),
         ),
+        if (isOwner) ...[
+          SizedBox(height: 10),
+          SizedBox(
+            width: 400,
+            height: 50,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                side: BorderSide(color: Colors.black, width: 1),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                  ),
+                  builder: (context) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom,
+                      ),
+
+                      child: StatefulBuilder(
+                        builder: (context, setModalState) {
+                          final currentUserUid =
+                              FirebaseAuth.instance.currentUser?.uid;
+                          final members = group.members.where(
+                            (id) => id != currentUserUid,
+                          ).toList();
+                          return RemoveMembersModal(members: members,groupId: group.id,);
+                        },
+                      ),
+                    );
+                  },
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  HeroIcon(HeroIcons.userMinus, size: 30),
+                  SizedBox(width: 10),
+                  Text("Eliminar integrante", style: TextStyle(fontSize: 15)),
+                ],
+              ),
+            ),
+          ),
+        ],
         SizedBox(height: 10),
         SizedBox(
           width: 400,
@@ -67,9 +122,7 @@ class GroupActionButtons extends ConsumerWidget {
                 builder: (context) {
                   return Padding(
                     padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(
-                        context,
-                      ).viewInsets.bottom, // 👈 eleva con el teclado
+                      bottom: MediaQuery.of(context).viewInsets.bottom,
                     ),
 
                     child: StatefulBuilder(

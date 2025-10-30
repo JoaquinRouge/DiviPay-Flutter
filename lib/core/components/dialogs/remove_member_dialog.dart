@@ -1,13 +1,17 @@
 import 'package:divipay/provider/groups_provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class LeaveGroupDialog extends ConsumerWidget {
+class RemoveMemberDialog extends ConsumerWidget {
   final String groupId;
+  final String userId;
 
-  const LeaveGroupDialog({super.key, required this.groupId});
+  const RemoveMemberDialog({
+    super.key,
+    required this.groupId,
+    required this.userId,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -15,12 +19,12 @@ class LeaveGroupDialog extends ConsumerWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       backgroundColor: Colors.white,
       title: const Text(
-        "Abandonar Grupo",
+        "Remover miembro del Grupo",
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         textAlign: TextAlign.center,
       ),
       content: const Text(
-        "Deberás ser invitado nuevamente para volver a unirte. En caso de ser el propietario, tu cargo será reasignado. Si sos el último miembro, el grupo será eliminado. Esta acción no se puede deshacer.",
+        "El miembro deberá ser invitado nuevamente para volver a unirse. Esta acción no se puede deshacer.",
         style: TextStyle(fontSize: 14),
         textAlign: TextAlign.center,
       ),
@@ -39,11 +43,10 @@ class LeaveGroupDialog extends ConsumerWidget {
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () async {
-                  final currentUserUid = await FirebaseAuth.instance.currentUser?.uid as String;
-                  ref.read(groupServiceProvider).removeMember(currentUserUid, groupId);
-                  await Future.delayed(const Duration(milliseconds: 300));
-                  context.go("/home");
-                },
+                  ref.read(groupServiceProvider).removeMember(userId, groupId);
+                  context.pop();
+                  context.pop();
+                 },
                 child: const Text("Confirmar", style: TextStyle(fontSize: 15)),
               ),
             ),
@@ -75,12 +78,16 @@ class LeaveGroupDialog extends ConsumerWidget {
     );
   }
 
-  static Future<dynamic> show(BuildContext context, String groupId) {
+  static Future<dynamic> show(
+    BuildContext context,
+    String userId,
+    String groupId,
+  ) {
     return showDialog(
       context: context,
       barrierDismissible: true,
       builder: (context) {
-        return LeaveGroupDialog(groupId: groupId);
+        return RemoveMemberDialog(groupId: groupId, userId: userId);
       },
     );
   }
