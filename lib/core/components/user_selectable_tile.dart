@@ -15,13 +15,6 @@ class UserSelectableTile extends ConsumerWidget {
     required this.onTap,
   }) : super(key: key);
 
-  String _getInitials(String fullName) {
-    final parts = fullName.trim().split(" ");
-    if (parts.isEmpty) return "";
-    if (parts.length == 1) return parts[0][0].toUpperCase();
-    return (parts.first[0] + parts.last[0]).toUpperCase();
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final color = Theme.of(context).primaryColor;
@@ -55,18 +48,25 @@ class UserSelectableTile extends ConsumerWidget {
             child: Row(
               children: [
                 // Avatar con iniciales
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: color.withOpacity(0.15),
-                  child: Text(
-                    _getInitials(user.username),
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: color,
-                    ),
-                  ),
-                ),
+                user.profileImageUrl.isEmpty
+                    ? CircleAvatar(
+                        radius: 20,
+                        backgroundColor: color.withOpacity(0.9),
+                        child: Text(
+                          user.username[0].toUpperCase(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      )
+                    : CircleAvatar(
+                        radius: 20, // tamaño del círculo
+                        backgroundImage: NetworkImage(user.profileImageUrl),
+                        backgroundColor:
+                            Colors.grey[200], // color de fondo mientras carga
+                      ),
                 const SizedBox(width: 12),
                 // Nombre completo
                 Expanded(

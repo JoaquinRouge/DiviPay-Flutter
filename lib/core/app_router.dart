@@ -1,6 +1,5 @@
 import 'package:divipay/presentation/screens/group_detail.dart';
 import 'package:divipay/presentation/screens/notifications.dart';
-import 'package:divipay/presentation/screens/prueba_supabase.dart';
 import 'package:divipay/presentation/screens/search_users.dart';
 import 'package:divipay/presentation/screens/profile.dart';
 import 'package:divipay/presentation/screens/register.dart';
@@ -25,11 +24,6 @@ final user = FirebaseAuth.instance.currentUser;
 final GoRouter routerApp = GoRouter(
   initialLocation: user != null ? '/home' : '/login',
   routes: [
-    GoRoute(
-      path: "/upload",
-      pageBuilder: (context, state) =>
-          noTransitionPage(PruebaSupabase(), state),
-    ),
     GoRoute(
       path: "/login",
       pageBuilder: (context, state) => noTransitionPage(Login(), state),
