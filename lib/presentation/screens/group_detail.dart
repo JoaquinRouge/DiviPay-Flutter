@@ -1,5 +1,5 @@
 import 'package:divipay/core/components/app_bar.dart';
-import 'package:divipay/domain/Group.dart';
+import 'package:divipay/core/domain/Group.dart';
 import 'package:divipay/provider/groups_provider.dart';
 import 'package:divipay/widgets/group_action_buttons.dart';
 import 'package:divipay/widgets/spent_summary.dart';

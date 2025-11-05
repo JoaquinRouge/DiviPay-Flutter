@@ -1,7 +1,7 @@
 import 'package:divipay/core/components/app_bar.dart';
 import 'package:divipay/core/components/bottom_app_bar.dart';
 import 'package:divipay/core/components/group_card.dart';
-import 'package:divipay/domain/Group.dart';
+import 'package:divipay/core/domain/Group.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

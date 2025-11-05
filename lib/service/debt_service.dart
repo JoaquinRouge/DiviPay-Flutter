@@ -1,4 +1,4 @@
-import 'package:divipay/domain/Spent.dart';
+import 'package:divipay/core/domain/Spent.dart';
 
 class DebtService {
   /// Calcula las deudas simplificadas dentro de un grupo.

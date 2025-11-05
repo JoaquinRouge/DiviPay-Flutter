@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:divipay/domain/FriendRequest.dart';
-import 'package:divipay/domain/User.dart';
+import 'package:divipay/core/domain/FriendRequest.dart';
+import 'package:divipay/core/domain/User.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 
 class UserDatasource {

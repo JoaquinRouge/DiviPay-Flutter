@@ -1,6 +1,6 @@
 import 'package:divipay/core/components/dialogs/delete_group_dialog.dart';
 import 'package:divipay/core/components/dialogs/leave_group_dialog.dart';
-import 'package:divipay/domain/Group.dart';
+import 'package:divipay/core/domain/Group.dart';
 import 'package:divipay/widgets/modal/add_friends_modal.dart';
 import 'package:divipay/widgets/modal/add_spent_modal.dart';
 import 'package:divipay/widgets/modal/remove_member_modal.dart';

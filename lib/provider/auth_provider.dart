@@ -1,4 +1,4 @@
-import 'package:divipay/datasource/firebase_auth_datasource.dart';
+import 'package:divipay/core/datasource/firebase_auth_datasource.dart';
 import 'package:divipay/repository/auth_repository.dart';
 import 'package:divipay/service/auth_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

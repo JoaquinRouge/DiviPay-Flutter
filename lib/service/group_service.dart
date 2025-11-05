@@ -1,5 +1,5 @@
-import 'package:divipay/domain/Group.dart';
-import 'package:divipay/domain/Spent.dart';
+import 'package:divipay/core/domain/Group.dart';
+import 'package:divipay/core/domain/Spent.dart';
 import 'package:divipay/repository/group_repo.dart';
 
 class GroupService {

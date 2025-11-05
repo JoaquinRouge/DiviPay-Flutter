@@ -1,6 +1,6 @@
 import 'package:divipay/core/components/app_bar.dart';
 import 'package:divipay/core/components/bottom_app_bar.dart';
-import 'package:divipay/domain/FriendRequest.dart';
+import 'package:divipay/core/domain/FriendRequest.dart';
 import 'package:divipay/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,6 +1,6 @@
-import 'package:divipay/datasource/user_datasource.dart';
-import 'package:divipay/domain/FriendRequest.dart';
-import 'package:divipay/domain/User.dart';
+import 'package:divipay/core/datasource/user_datasource.dart';
+import 'package:divipay/core/domain/FriendRequest.dart';
+import 'package:divipay/core/domain/User.dart';
 
 class UserRepo {
   final UserDatasource datasource = UserDatasource();

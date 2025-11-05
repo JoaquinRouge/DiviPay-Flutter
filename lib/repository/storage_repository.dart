@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:divipay/datasource/storage_datasource.dart';
+import 'package:divipay/core/datasource/storage_datasource.dart';
 
 class StorageRepository {
   final StorageDataSource datasource = StorageDataSource();

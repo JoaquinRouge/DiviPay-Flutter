@@ -1,6 +1,6 @@
 import 'package:divipay/provider/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:divipay/domain/User.dart';
+import 'package:divipay/core/domain/User.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class UserSelectableTile extends ConsumerWidget {

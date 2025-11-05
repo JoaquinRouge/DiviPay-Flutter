@@ -1,4 +1,4 @@
-import 'package:divipay/domain/Group.dart';
+import 'package:divipay/core/domain/Group.dart';
 import 'package:divipay/provider/groups_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';

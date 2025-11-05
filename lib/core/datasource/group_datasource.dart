@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:divipay/domain/Spent.dart';
+import 'package:divipay/core/domain/Spent.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:divipay/domain/Group.dart';
+import 'package:divipay/core/domain/Group.dart';
 
 class GroupDatasource {
   final firebaseInstance = FirebaseFirestore.instance.collection('groups');

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:divipay/domain/Spent.dart';
+import 'package:divipay/core/domain/Spent.dart';
 
 class Group {
   Group({

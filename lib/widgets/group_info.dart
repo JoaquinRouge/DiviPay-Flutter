@@ -1,4 +1,4 @@
-import 'package:divipay/domain/Group.dart';
+import 'package:divipay/core/domain/Group.dart';
 import 'package:divipay/widgets/modal/update_group_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

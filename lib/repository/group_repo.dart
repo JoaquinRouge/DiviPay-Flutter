@@ -1,6 +1,6 @@
-import 'package:divipay/datasource/group_datasource.dart';
-import 'package:divipay/domain/Group.dart';
-import 'package:divipay/domain/Spent.dart';
+import 'package:divipay/core/datasource/group_datasource.dart';
+import 'package:divipay/core/domain/Group.dart';
+import 'package:divipay/core/domain/Spent.dart';
 
 class GroupRepo {
   final GroupDatasource groupDatasource;

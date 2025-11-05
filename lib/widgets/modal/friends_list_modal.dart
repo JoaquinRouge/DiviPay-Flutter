@@ -1,5 +1,5 @@
 import 'package:divipay/core/components/dialogs/cancel_friendship_dialog.dart';
-import 'package:divipay/domain/User.dart';
+import 'package:divipay/core/domain/User.dart';
 import 'package:divipay/provider/user_provider.dart';
 import 'package:divipay/service/profile_picture_service.dart';
 import 'package:flutter/material.dart';

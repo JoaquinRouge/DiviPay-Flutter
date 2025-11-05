@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:divipay/datasource/firebase_auth_datasource.dart';
+import 'package:divipay/core/datasource/firebase_auth_datasource.dart';
 
 class AuthRepository {
   final FirebaseDataSource dataSource;

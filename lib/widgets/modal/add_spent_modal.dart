@@ -1,5 +1,5 @@
 import 'package:divipay/core/components/user_selectable_tile.dart';
-import 'package:divipay/domain/Spent.dart';
+import 'package:divipay/core/domain/Spent.dart';
 import 'package:divipay/provider/groups_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

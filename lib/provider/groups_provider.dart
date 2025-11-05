@@ -1,4 +1,4 @@
-import 'package:divipay/datasource/group_datasource.dart';
+import 'package:divipay/core/datasource/group_datasource.dart';
 import 'package:divipay/repository/group_repo.dart';
 import 'package:divipay/service/group_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

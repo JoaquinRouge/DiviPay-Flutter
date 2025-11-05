@@ -1,5 +1,5 @@
-import 'package:divipay/domain/FriendRequest.dart';
-import 'package:divipay/domain/User.dart';
+import 'package:divipay/core/domain/FriendRequest.dart';
+import 'package:divipay/core/domain/User.dart';
 import 'package:divipay/repository/user_repo.dart';
 
 class UserService {

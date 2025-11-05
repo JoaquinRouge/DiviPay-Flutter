@@ -1,6 +1,6 @@
 import 'package:divipay/provider/groups_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:divipay/domain/Spent.dart';
+import 'package:divipay/core/domain/Spent.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 

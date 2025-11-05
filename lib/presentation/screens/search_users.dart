@@ -1,5 +1,5 @@
 import 'package:divipay/core/components/app_bar.dart';
-import 'package:divipay/domain/User.dart';
+import 'package:divipay/core/domain/User.dart';
 import 'package:divipay/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:divipay/core/components/bottom_app_bar.dart';
