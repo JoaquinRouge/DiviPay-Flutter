@@ -29,15 +29,53 @@ class _SearchUsersState extends ConsumerState<SearchUsers> {
             padding: const EdgeInsets.all(16),
             child: TextField(
               controller: _controller,
-              decoration: InputDecoration(
-                hintText: 'Buscar Usuarios...',
-                prefixIcon: Icon(Icons.search),
-              ),
               onChanged: (value) {
                 setState(() {
                   _query = value;
                 });
               },
+              style: const TextStyle(fontSize: 16),
+              cursorColor: Theme.of(context).primaryColor,
+              decoration: InputDecoration(
+                hintText: 'Buscar usuarios...',
+                hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 15),
+                prefixIcon: Icon(
+                  Icons.search_rounded,
+                  color: Colors.grey.shade600,
+                  size: 24,
+                ),
+                filled: true,
+                fillColor: Colors.grey.shade100,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(
+                    color: Theme.of(context).primaryColor,
+                    width: 1.5,
+                  ),
+                ),
+                suffixIcon: _query.isNotEmpty
+                    ? IconButton(
+                        icon: Icon(
+                          Icons.close_rounded,
+                          color: Colors.grey.shade600,
+                        ),
+                        onPressed: () {
+                          _controller.clear();
+                          setState(() {
+                            _query = '';
+                          });
+                        },
+                      )
+                    : null,
+              ),
             ),
           ),
           Expanded(

@@ -19,94 +19,72 @@ class CustomBottomBar extends ConsumerWidget {
     final notificationListener = ref.watch(incomingFriendRequestsProvider);
 
     return Container(
-      height: 70,
+      height: 75,
       decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: Colors.grey, width: 0.1)),
+        gradient: LinearGradient(
+          colors: [
+            Colors.white,
+            Colors.grey.shade100,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _navItem(context, ref, HeroIcons.home, 'Inicio', '/home'),
+              _navItem(context, ref, HeroIcons.magnifyingGlass, 'Encontrar', '/search_users'),
+              _notificationItem(context, ref, notificationListener),
+              _navItem(context, ref, HeroIcons.user, 'Perfil', '/profile'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _navItem(BuildContext context, WidgetRef ref, HeroIcons icon, String label, String route) {
+    final bool samePage = ref.watch(pageProvider) == route;
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(15),
+      splashColor: Theme.of(context).primaryColor.withOpacity(0.1),
+      onTap: () => ref.read(pageProvider.notifier).state = route,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            GestureDetector(
-              onTap: () {
-                ref.read(pageProvider.notifier).state = '/home';
-              },
-              child: navItem(context, HeroIcons.home, 'Inicio', '/home', ref),
+            HeroIcon(
+              icon,
+              style: samePage ? HeroIconStyle.solid : HeroIconStyle.outline,
+              size: 28,
+              color: samePage ? Theme.of(context).primaryColor : Colors.grey,
             ),
-            GestureDetector(
-              onTap: () {
-                ref.read(pageProvider.notifier).state = '/search_users';
-              },
-              child: navItem(
-                context,
-                HeroIcons.magnifyingGlass,
-                'Encontrar',
-                '/search_users',
-                ref,
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                ref.read(pageProvider.notifier).state = '/notifications';
-              },
-              child: notificationListener.when(
-                data: (requests) {
-                  if (requests.isEmpty) {
-                    return navItem(
-                      context,
-                      HeroIcons.envelope,
-                      'Solicitudes',
-                      '/notifications',
-                      ref,
-                    );
-                  } else {
-                    return Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        navItem(
-                          context,
-                          HeroIcons.envelope,
-                          'Solicitudes',
-                          '/notifications',
-                          ref,
-                        ),
-                        Positioned(
-                          right: 15,
-                          top: 0,
-                          child: Container(
-                            width: 12,
-                            height: 12,
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                },
-                loading: () => navItem(
-                  context,
-                  HeroIcons.envelope,
-                  'Solicitudes',
-                  '/notifications',
-                  ref,
-                ),
-                error: (e, _) => Center(child: Text('Error: $e')),
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                ref.read(pageProvider.notifier).state = '/profile';
-              },
-              child: navItem(
-                context,
-                HeroIcons.user,
-                'Perfil',
-                '/profile',
-                ref,
+            const SizedBox(height: 3),
+            Text(
+              label,
+              style: TextStyle(
+                color: samePage ? Theme.of(context).primaryColor : Colors.grey,
+                fontSize: 11,
+                fontWeight: samePage ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
           ],
@@ -115,42 +93,32 @@ class CustomBottomBar extends ConsumerWidget {
     );
   }
 
-  Column navItem(
-    BuildContext context,
-    HeroIcons icon,
-    String label,
-    String route,
-    WidgetRef ref,
-  ) {
-    bool samePage = ref.watch(pageProvider) == route;
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        HeroIcon(
-          icon,
-          style: samePage ? HeroIconStyle.solid : HeroIconStyle.outline,
-          size: 30,
-          color: samePage ? Theme.of(context).primaryColor : Colors.grey,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            color: samePage ? Theme.of(context).primaryColor : Colors.grey,
-            fontSize: 11,
-          ),
-        ),
-      ],
+  Widget _notificationItem(BuildContext context, WidgetRef ref, AsyncValue<List> listener) {
+    return listener.when(
+      data: (requests) {
+        final hasNotifications = requests.isNotEmpty;
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            _navItem(context, ref, HeroIcons.envelope, 'Solicitudes', '/notifications'),
+            if (hasNotifications)
+              Positioned(
+                right: 12,
+                top: -2,
+                child: Container(
+                  width: 10,
+                  height: 10,
+                  decoration: const BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
+      loading: () => _navItem(context, ref, HeroIcons.envelope, 'Solicitudes', '/notifications'),
+      error: (e, _) => const SizedBox(),
     );
   }
 }
-
-
-//navItem(
-//                context,
- //               HeroIcons.envelope,
-//                'Solicitudes',
-//                '/notifications',
-//                ref,
-//              ),
